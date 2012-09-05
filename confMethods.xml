@@ -1,0 +1,42 @@
+<methods>
+    
+    
+     <Ideal>
+        <class>prefwork.rating.method.Ideal</class>
+      </Ideal>
+     <UtaBridge>
+        <class>prefwork.rating.method.UtaBridge</class>
+      </UtaBridge>
+      <StatisticalCollaborative>
+        <class>prefwork.rating.method.StatisticalCollaborative</class>
+      </StatisticalCollaborative>
+        
+      <Statistical>
+        <class>prefwork.rating.method.Statistical</class>
+        <rater>
+           <class>prefwork.rating.method.rater.WeightAverage</class>
+           <weights>VARIANCE</weights>
+		   <useWeights>false</useWeights>
+        </rater>
+        <representant>
+          <class>prefwork.rating.method.representant.AvgRepresentant</class>
+        </representant>
+        <numericalNormalizer>prefwork.rating.method.normalizer.Linear</numericalNormalizer>
+        <nominalNormalizer>prefwork.rating.method.normalizer.RepresentantNormalizer</nominalNormalizer>
+        <colorNormalizer>prefwork.rating.method.normalizer.ColorNormalizer</colorNormalizer>
+        <listNormalizer>prefwork.rating.method.normalizer.ListNormalizer
+        	<normalizer>prefwork.rating.method.normalizer.RepresentantNormalizer        	
+		        	<useSim>1</useSim>
+        	</normalizer>
+        </listNormalizer>
+	        <textNormalizer>prefwork.rating.method.normalizer.TextNormalizer</textNormalizer>
+      </Statistical>
+      <ProgolBridge>
+        <class>prefwork.rating.method.ProgolBridge</class>
+        <pathToProgol>C:\data\progs\ilp\</pathToProgol>
+        <binaryName>progol4.2.exe</binaryName>
+        <monotonize>false</monotonize>
+        <noise>60</noise>         
+      </ProgolBridge>
+      
+    </methods>

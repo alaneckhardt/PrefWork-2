@@ -1,0 +1,100 @@
+<datasources>
+
+    
+      <YahooKDD>
+        <class>prefwork.rating.datasource.YahooKDDSource</class>
+		<usersToLoad>1</usersToLoad>
+		<ratingsCount>200</ratingsCount>		
+      </YahooKDD>
+      
+            
+      
+<THMultiUserSource>
+  <class>prefwork.rating.datasource.THMultiUserDataSource</class>
+  <datasources> <TH50sushi><file>C:\data\datasets\THSources\OKSushi\sushi</file></TH50sushi>
+	 </datasources>
+</THMultiUserSource>
+<THSource>
+  <class>prefwork.rating.datasource.THDataSource</class>
+  <datasources>
+	              <!--  Regrese -->
+	<TH1abalone><file>C:\data\datasets\THSources\OKAbalone\abalone.data</file></TH1abalone>
+	<TH4auto-mpg><file>C:\data\datasets\THSources\OKautoMPG\auto-mpg.data</file></TH4auto-mpg>
+	<TH6breast-cancer-wisconsin><file>C:\data\datasets\THSources\OKbreastCancer\breast-cancer-wisconsin.data</file></TH6breast-cancer-wisconsin>
+	<TH7wdbc><file>C:\data\datasets\THSources\OKbreastCancer\wdbc.data</file></TH7wdbc>
+	<TH8wpbc><file>C:\data\datasets\THSources\OKbreastCancer\wpbc.data</file></TH8wpbc>
+	<TH8wpbc2><file>C:\data\datasets\THSources\OKbreastCancer\wpbc.data2</file></TH8wpbc2>
+	<TH11communities><file>C:\data\datasets\THSources\OKcommunities\communities.data</file></TH11communities>
+	<TH12concrete><file>C:\data\datasets\THSources\OKconcrete\Concrete_Data.csv</file></TH12concrete>
+	<TH16forestfires><file>C:\data\datasets\THSources\OKforest\forestfires.csv</file></TH16forestfires>
+	<TH23meta><file>C:\data\datasets\THSources\OKmeta-data\meta.data</file></TH23meta>
+	<TH44servo><file>C:\data\datasets\THSources\OKservo\servo.data</file></TH44servo>
+	<TH45slump><file>C:\data\datasets\THSources\OKconcreteSlump\slump_test.data</file></TH45slump>
+	<THslump2><file>C:\data\datasets\THSources\OKconcreteSlump\slump_test.data2</file></THslump2>
+	<THslump3><file>C:\data\datasets\THSources\OKconcreteSlump\slump_test.data3</file></THslump3>
+	<TH46machine><file>C:\data\datasets\THSources\OKcpuPerformance\machine.data</file></TH46machine>
+	
+	
+	      <!--  Binarni klasifikace -->
+	<TH2diagnosis><file>C:\data\datasets\THSources\OKacute\diagnosis.data</file></TH2diagnosis>
+	<THdiagnosis2><file>C:\data\datasets\THSources\OKacute\diagnosis.data2</file></THdiagnosis2>
+	<TH3adult><file>C:\data\datasets\THSources\OKAdult\adult.data</file></TH3adult>
+	<TH5transfusion><file>C:\data\datasets\THSources\OKblood-transfusion\transfusion.data</file></TH5transfusion>
+	<TH14crx><file>C:\data\datasets\THSources\OKcredit-screening\crx.data</file></TH14crx>
+	<TH15bands><file>C:\data\datasets\THSources\OKcylinder-bands\bands.data</file></TH15bands>
+	<TH17haberman><file>C:\data\datasets\THSources\OKhaberman\haberman.data</file></TH17haberman>
+	<TH18hepatitis><file>C:\data\datasets\THSources\OKhepatitis\hepatitis.data</file></TH18hepatitis>
+	<TH19horse-colic><file>C:\data\datasets\THSources\OKhorse-colic\horse-colic.data</file></TH19horse-colic>
+	<TH20ionosphere><file>C:\data\datasets\THSources\OKionosphere\ionosphere.data</file></TH20ionosphere>
+	<TH21magic04><file>C:\data\datasets\THSources\OKmagic\magic04.data</file></TH21magic04>
+	<TH22mammographic_masses><file>C:\data\datasets\THSources\OKmammographic-masses\mammographic_masses.data</file></TH22mammographic_masses>
+	<TH24agaricus><file>C:\data\datasets\THSources\OKmushroom\agaricus-lepiota.data</file></TH24agaricus>
+	<TH26ozoneeighthr><file>C:\data\datasets\THSources\OKozone\eighthr.data</file></TH26ozoneeighthr>
+	<TH27ozoneonehr><file>C:\data\datasets\THSources\OKozone\onehr.data</file></TH27ozoneonehr>
+	<TH28parkinsons><file>C:\data\datasets\THSources\OKparkinsons\parkinsons.data</file></TH28parkinsons>
+	<TH29pima-indians-diabetes><file>C:\data\datasets\THSources\OKpima-indians-diabetes\pima-indians-diabetes.data</file></TH29pima-indians-diabetes>
+	<TH34spambase><file>C:\data\datasets\THSources\OKspambase\spambase.data</file></TH34spambase>
+	<TH36tic-tac-toe><file>C:\data\datasets\THSources\OKtic-tac-toe\tic-tac-toe.data</file></TH36tic-tac-toe>
+	<TH37house-votes><file>C:\data\datasets\THSources\OKvoting-records\house-votes-84.data</file></TH37house-votes>
+	<TH41sonar><file>C:\data\datasets\THSources\OKundocumented\connectionist-bench\sonar\sonar.all-data</file></TH41sonar>
+	<TH42australian><file>C:\data\datasets\THSources\OKstatlog\australian\australian.dat</file></TH42australian>
+	<TH43heart><file>C:\data\datasets\THSources\OKstatlog\heart\heart.dat</file></TH43heart>
+	
+	      <!--  Klasifikace -->
+	<TH9car><file>C:\data\datasets\THSources\OKcar\car.data</file></TH9car>
+	<TH10cmc><file>C:\data\datasets\THSources\OKcmcVymeneneLongTermAShortTerm\cmc.data</file></TH10cmc>
+	<TH25nursery><file>C:\data\datasets\THSources\OKnursery\nursery.data</file></TH25nursery> 
+	<TH32post-operative><file>C:\data\datasets\THSources\OKpostoperative-patient-data\post-operative.data</file></TH32post-operative>
+	<TH35tae><file>C:\data\datasets\THSources\OKtae\tae.data</file></TH35tae>
+	<TH38wine><file>C:\data\datasets\THSources\OKwine\wine.data</file></TH38wine>
+	<TH39winequality-red><file>C:\data\datasets\THSources\OKwine\winequality-red.csv</file></TH39winequality-red>
+	<TH40winequality-white><file>C:\data\datasets\THSources\OKwine\winequality-white.csv</file></TH40winequality-white>
+	<TH49poker-hand-filtered><file>C:\data\datasets\THSources\OKpoker\poker-hand-filtered.data</file></TH49poker-hand-filtered>
+	
+	<!-- Vyrazene -->
+	<TH13connect-4b><file>C:\data\datasets\THSources\OKConnect-4\connect-4b.data</file></TH13connect-4b>
+	<TH33shuttle-landing-control><file>C:\data\datasets\THSources\OKshuttle-landing-control\shuttle-landing-control.data</file></TH33shuttle-landing-control>
+	<TH47winequality-all><file>C:\data\datasets\THSources\OKwine\winequality-all</file></TH47winequality-all>
+	<TH48winequality-colour-all><file>C:\data\datasets\THSources\OKwine\winequality-colour-all</file></TH48winequality-colour-all>
+	<TH30poker-hand-testing><file>C:\data\datasets\THSources\OKpoker\poker-hand-testing.data</file></TH30poker-hand-testing>
+	<TH31poker-hand-training-true><file>C:\data\datasets\THSources\OKpoker\poker-hand-training-true.data</file></TH31poker-hand-training-true>
+	
+	
+	
+	
+	<THNRI09><file>C:\data\datasets\THSources\OKNRI\nri09</file></THNRI09>
+	<THNRI08><file>C:\data\datasets\THSources\OKNRI\nri08</file></THNRI08>
+	
+	
+	<THAutobazar5><file>C:\data\datasets\THSources\OKAutobazar\Autobazar5</file></THAutobazar5>
+	<THAutobazar10><file>C:\data\datasets\THSources\OKAutobazar\Autobazar10</file></THAutobazar10>
+	<THAutobazar20><file>C:\data\datasets\THSources\OKAutobazar\Autobazar20</file></THAutobazar20>
+	<THAutobazar50><file>C:\data\datasets\THSources\OKAutobazar\Autobazar50</file></THAutobazar50>
+	
+	<THNotebooks5><file>C:\data\datasets\THSources\OKNotebooks\Notebooks5</file></THNotebooks5>
+	<THNotebooks10><file>C:\data\datasets\THSources\OKNotebooks\Notebooks10</file></THNotebooks10>
+	<THNotebooks20><file>C:\data\datasets\THSources\OKNotebooks\Notebooks20</file></THNotebooks20>
+	<THNotebooks50><file>C:\data\datasets\THSources\OKNotebooks\Notebooks50</file></THNotebooks50>
+  </datasources>
+</THSource>
+    </datasources>
