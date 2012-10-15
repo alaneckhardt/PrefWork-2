@@ -32,6 +32,7 @@ import prefwork.rating.datasource.YahooKDDSource.Artist;
 import prefwork.rating.datasource.YahooKDDSource.Genre;
 import prefwork.rating.datasource.YahooKDDSource.Track;
 import weka.core.Attribute;
+import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SparseInstance;
@@ -86,18 +87,18 @@ public class YahooKDDSource extends ContentDataSource {
 		int size = 5;
 		Attribute[] attrs = new Attribute[size];
 		attrs[0] = new Attribute("Rating", 0);
-		attrs[1] = new Attribute("TrackId", (java.util.ArrayList<String>)null, 1);
-		attrs[2] = new Attribute("AlbumId", (java.util.ArrayList<String>)null, 2);
-		attrs[3] = new Attribute("ArtistId", (java.util.ArrayList<String>)null, 3);
-		ArrayList<Attribute> listAttr = new ArrayList<Attribute>();
-		listAttr.add(new Attribute("Genres",(java.util.ArrayList<String>)null));
+		attrs[1] = new Attribute("TrackId", (FastVector)null, 1);
+		attrs[2] = new Attribute("AlbumId", (FastVector)null, 2);
+		attrs[3] = new Attribute("ArtistId", (FastVector)null, 3);
+		FastVector listAttr = new FastVector();
+		listAttr.addElement(new Attribute("Genres",(FastVector)null));
 		attrs[4]= new Attribute("Genres", new Instances("Genres", listAttr,10), 4);	
 			
 
 		YahooKDDattributes = attrs;
-		ArrayList<Attribute> list = new ArrayList<Attribute>();
+		FastVector list = new FastVector();
 		for (int i = 0; i < attrs.length; i++) {
-			list.add(attrs[i]);
+			list.addElement(attrs[i]);
 		}
 		instances = new Instances("name", list,10);
 		instances.setClassIndex(0);

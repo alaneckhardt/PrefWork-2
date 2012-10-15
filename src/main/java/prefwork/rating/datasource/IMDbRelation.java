@@ -25,6 +25,7 @@ import prefwork.rating.Rating;
 
 import weka.core.Attribute;
 import weka.core.DenseInstance;
+import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SparseInstance;
@@ -288,26 +289,26 @@ public class IMDbRelation {
 		Attribute[] attrs = new Attribute[size];
 		//IMDB
 		for (int i = 0; i < IMDBMaps.size(); i++) {
-			ArrayList<Attribute> list = new ArrayList<Attribute>();
-			list.add(new Attribute("list",(java.util.ArrayList<String>)null));
+			FastVector list = new FastVector();
+			list.addElement(new Attribute("list",(FastVector)null));
 			attrs[i]= new Attribute(files[i], new Instances("list"+(i), list,10), i);	
 		}
 		//Adding LaserDisc data
 		if(getLaserDisc){
 			for (int i = 0; i < 29; i++) {
-				attrs[IMDBMaps.size() + i] = new Attribute(LaserDisc.names[i], (java.util.ArrayList<String>)null, IMDBMaps.size() + i);
+				attrs[IMDBMaps.size() + i] = new Attribute(LaserDisc.names[i], (FastVector)null, IMDBMaps.size() + i);
 			}
 		}
 
 		//Adding the plot
 		if(getPlot){
-			attrs[attrs.length-1] = new Attribute("plotRel.csv", (java.util.ArrayList<String>)null, IMDBMaps.size());
+			attrs[attrs.length-1] = new Attribute("plotRel.csv", (FastVector)null, IMDBMaps.size());
 
 		}
 		IMDBAttributes = attrs;
-		ArrayList<Attribute> list = new ArrayList<Attribute>();
+		FastVector list = new FastVector();
 		for (int i = 0; i < attrs.length; i++) {
-			list.add(attrs[i]);
+			list.addElement(attrs[i]);
 		}
 		instances = new Instances("name", list,10);
 		instances.setClassIndex(0);

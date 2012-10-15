@@ -15,6 +15,7 @@ import prefwork.core.Utils;
 import prefwork.rating.Rating;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
+import weka.core.FastVector;
 import weka.core.Instances;
 import weka.core.SparseInstance;
 
@@ -119,7 +120,7 @@ public abstract class SQLDataSource extends ContentDataSource {
 		}
 		
 		Configuration dsConf = config.configurationAt(section+".datasources."+dataSourceName);
-		ArrayList<Attribute> attrs = new ArrayList<Attribute>();
+		FastVector attrs = new FastVector();
 		if(dsConf.containsKey("attributes.attribute(" + 0 + ").name")){
 			userColumn = (String) dsConf.getProperty("attributes.attribute(0).name");
 			objectColumn = (String) dsConf.getProperty("attributes.attribute(1).name");
@@ -134,18 +135,18 @@ public abstract class SQLDataSource extends ContentDataSource {
 				if ("numerical".equals(attrType)) {
 					attr = new Attribute(attrName,attrId);
 				} else if ("nominal".equals(attrType)) {
-					attr = new Attribute(attrName, (ArrayList<String>) null, attrId);
+					attr = new Attribute(attrName, (FastVector) null, attrId);
 				} else if ("list".equals(attrType)) {	
-					ArrayList<Attribute> list = new ArrayList<Attribute>();
-					list.add(new Attribute("list",(java.util.ArrayList<String>)null));
+					FastVector list = new FastVector();
+					list.addElement(new Attribute("list",(FastVector)null));
 					attr = new Attribute(attrName,  new Instances("list"+attrId, list,0), attrId);			
 				}
-				attrs.add(attr);
+				attrs.addElement(attr);
 				attrId++;
 			}
 			attributes = new Attribute[attrs.size()];
 			for (int i = 0; i < attributes.length; i++) {
-				attributes[i] = attrs.get(i);
+				attributes[i] = (Attribute) attrs.elementAt(i);
 			}
 			instances = new Instances("name", attrs,0);
 			instances.setClassIndex(0);
