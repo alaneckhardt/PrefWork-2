@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
-	<threads>1</threads>
+	<threads>2</threads>
 	<run>Progol</run>
 	<runs>
 	
 	<Progol>
 			<methods>
-				 <method>
+				<method>
+					<name>Statistical</name>
+				</method> 
+				<method>
+					<name>Mean</name>
+				</method>
+				<method>
+					<name>WekaBridge</name>
+					<classifier>weka.classifiers.functions.MultilayerPerceptron</classifier>
+				</method>
+				<method>
+					<name>WekaBridge</name>
+					<classifier>weka.classifiers.functions.SMOreg</classifier>
+				</method>
+				 
+				<!-- <method>
+					<name>Statistical</name>
+					<rater>
+						<class>prefwork.rating.method.rater.MethodRater</class>
+						<method>prefwork.rating.method.ProgolBridge
+       					 <noise>5</noise>         
+                          </method>
+					</rater>
+				</method> 
+				<method>
 					<name>ProgolBridge</name>
         			<noise>0</noise>         
 				</method> 
@@ -22,7 +46,6 @@
 					<name>ProgolBridge</name>
         			<noise>70</noise>         
 				</method> 
-				<!-- 
 				 <method>
 					<name>ProgolBridge</name>
         			<noise>10</noise>         
@@ -112,7 +135,7 @@
           		<test>
 	              <class>prefwork.rating.test.Bootstrap</class>	
 	               <trainSets>10,20,30,40,50</trainSets>
-	              <path>ProgolBridgeComp2</path>
+	              <path>ProgolBridgeComp3</path>
 	              <numberOfRuns>5</numberOfRuns>
 				  <testInterpreter><class>prefwork.rating.test.DataMiningStatistics</class></testInterpreter>
 	            </test>   

@@ -38,5 +38,11 @@
         <monotonize>false</monotonize>
         <noise>60</noise>         
       </ProgolBridge>
+	<WekaBridge>
+		<class>prefwork.rating.method.WekaBridge</class>
+	</WekaBridge>
+	<Mean>
+		<class>prefwork.rating.method.Mean</class>
+	</Mean>
       
     </methods>
