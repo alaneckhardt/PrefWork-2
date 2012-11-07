@@ -1,6 +1,10 @@
 <methods>
     
     
+	<CofiBridge>
+		<class>prefwork.rating.method.CofiBridge</class>
+		<knn>30</knn>
+	</CofiBridge>
      <Ideal>
         <class>prefwork.rating.method.Ideal</class>
       </Ideal>
