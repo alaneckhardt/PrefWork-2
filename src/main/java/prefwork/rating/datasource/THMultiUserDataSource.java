@@ -152,7 +152,6 @@ public class THMultiUserDataSource extends THDataSource{
 	public Integer userId() {
 		if (this.currentUser >= userCount-1)
 			return null;
-		currentUser = this.currentUser;
 		this.currentUser++;
 		return currentUser;
 	}
@@ -166,12 +165,21 @@ public class THMultiUserDataSource extends THDataSource{
 		this.attributes = attributes;
 		this.names = null;
 	}*/
+	@Override
+	public void setFixedUserId(Integer userId) {
+		currentUser = userId;		
+	}
 	public void setClasses(double[] classes) {
 		this.classes = classes;
 	}
 
 	public int getTargetAttribute() {
 		return 2;
+	}
+	public void configDataSource(XMLConfiguration config, String section, String dataSourceName) {
+		Configuration dsConf = config.configurationAt(section);
+		super.configDataSource(config, section, dataSourceName);
+		userCount =  Utils.getIntFromConfIfNotNull(dsConf, ".datasources."+dataSourceName+".userCount", userCount);
 	}
 
 }
