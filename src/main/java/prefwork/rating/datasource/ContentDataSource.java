@@ -1,14 +1,12 @@
 package prefwork.rating.datasource;
 
-import java.util.List;
 import java.util.Random;
 
-import weka.core.Attribute;
-import weka.core.Instances;
 import prefwork.core.DataSource;
 import prefwork.core.UserEval;
 import prefwork.rating.Rating;
-import prefwork.rating.method.normalizer.Normalizer;
+import weka.core.Attribute;
+import weka.core.Instances;
 
 public abstract class ContentDataSource implements DataSource{
 	/** Attributes of the dataset */
@@ -121,7 +119,7 @@ public abstract class ContentDataSource implements DataSource{
 	}
 
 	protected Integer getNextIndex(){
-		if(currentUser >= size())
+		if(currentUser >= userCount)
 			return null;
 		if (objectIndex >= size())
 			return objectIndex;
@@ -145,8 +143,8 @@ public abstract class ContentDataSource implements DataSource{
 	}
 	@Override
 	public void restart() {
-		objectIndex=0;
-		objectIndex=getNextIndex();
+		objectIndex = 0;
+		objectIndex = getNextIndex();
 	}
 
 	@Override
