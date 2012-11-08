@@ -110,7 +110,7 @@ public abstract class ContentDataSource implements DataSource{
 
 	@Override
 	public UserEval next() {
-		if(this.objectIndex == size())
+		if(this.objectIndex >= size())
 			return null;
 		UserEval object = userRecords[currentUser][objectIndex];
 		objectIndex++;
