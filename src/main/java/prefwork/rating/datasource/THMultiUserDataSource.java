@@ -16,10 +16,7 @@ import prefwork.core.Utils;
 import prefwork.rating.Rating;
 import weka.core.Attribute;
 
-public class THMultiUserDataSource extends THDataSource{
-	protected boolean hasUserId = false;
-	protected boolean hasObjectId = false;
-	
+public class THMultiUserDataSource extends THDataSource{	
 	protected void getData() {
 		try {
 			maxLoad = 10000;
