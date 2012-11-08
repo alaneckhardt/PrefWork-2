@@ -124,18 +124,20 @@
 			<db><!--  -->
 					    <!-- TH9car,TH10cmc,TH25nursery,TH32post-operative,TH35tae,TH38wine,TH39winequality-red,TH40winequality-white,TH49poker-hand-filtered -->
 				
-				<name>THSource</name>
+			  <name>THMultiUserSource</name>
+				<size>350</size>
+				<datasources>SlanBeh</datasources>
+					<!--<name>Slantour</name>
 				<maxSize>200</maxSize>
-				<datasources>TH9car,TH10cmc,TH25nursery,TH32post-operative,TH35tae,TH38wine,TH39winequality-red,TH40winequality-white,TH49poker-hand-filtered</datasources>
-				 
+				<datasources>SlantourDS</datasources> --> 
 			</db>
 
 			</dbs>
 			<tests>
           		<test>
 	              <class>prefwork.rating.test.Bootstrap</class>	
-	               <trainSets>10,20,30,40,50</trainSets>
-	              <path>ProgolBridgeComp3</path>
+	               <trainSets>10,20,30,40,50,60,70,80,90,100,150,180</trainSets>
+	              <path>SlanBeh</path>
 	              <numberOfRuns>5</numberOfRuns>
 				  <testInterpreter><class>prefwork.rating.test.DataMiningStatistics</class></testInterpreter>
 	            </test>   

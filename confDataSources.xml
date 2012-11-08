@@ -11,7 +11,10 @@
       
 <THMultiUserSource>
   <class>prefwork.rating.datasource.THMultiUserDataSource</class>
-  <datasources> <TH50sushi><file>C:\data\datasets\THSources\OKSushi\sushi</file></TH50sushi>
+  <datasources>
+   <TH50sushi><file>C:\data\datasets\THSources\OKSushi\sushi</file></TH50sushi>
+	 <Slan><file>c:\data\datasets\slantour\testSlan</file></Slan>
+	 <SlanBeh><file>c:\data\datasets\slantour\testSlanBehaviour</file></SlanBeh>
 	 </datasources>
 </THMultiUserSource>
 <THSource>
@@ -97,4 +100,26 @@
 	<THNotebooks50><file>C:\data\datasets\THSources\OKNotebooks\Notebooks50</file></THNotebooks50>
   </datasources>
 </THSource>
+
+      <CSVFlix>
+        <class>prefwork.datasource.NetFlix</class>
+        <path>D:\\data2\\datasets\\flix\\allRatingsMappedRandomFiltered.csv</path>
+
+          <attributes>
+            <attribute><name>flixmovieid</name><type>numerical</type></attribute>
+            <attribute><name>userid</name><type>numerical</type></attribute>
+            <attribute><name>rating</name><type>numerical</type></attribute>
+            <attribute><name>datum</name><type>nominal</type></attribute>
+            <attribute><name>randomize</name><type>numerical</type></attribute>
+          </attributes>
+          <targetAttribute>2</targetAttribute>
+          <classes>1,2,3,4,5</classes>
+          <objectIndex>0</objectIndex>
+          <userIndex>1</userIndex>
+          
+          <randomizeIndex>4</randomizeIndex>
+           <loadOnlySpecifiedUsers>true</loadOnlySpecifiedUsers>
+           <usersList>802373,744065,1135903</usersList>
+      
+      </CSVFlix>
     </datasources>
