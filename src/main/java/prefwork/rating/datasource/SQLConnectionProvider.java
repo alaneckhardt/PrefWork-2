@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public abstract class SQLConnectionProvider {
+	protected String host = "localhost";
 	protected String db;
 
 	protected String url;
@@ -12,6 +13,12 @@ public abstract class SQLConnectionProvider {
 	protected String password="aaa";
 	protected Connection conn;
 	public abstract void connect() throws SQLException;
+	public String getHost() {
+		return host;
+	}
+	public void setHost(String host) {
+		this.host = host;
+	}
 	public String getDb() {
 		return db;
 	}
