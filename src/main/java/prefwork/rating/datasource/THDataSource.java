@@ -220,6 +220,7 @@ public class THDataSource extends ContentDataSource{
 	public void configDataSource(XMLConfiguration config, String section, String dataSourceName) {
 		Configuration dsConf = config.configurationAt(section);
 		file = Utils.getFromConfIfNotNull(dsConf, ".datasources."+dataSourceName+".file", file);
+		size = Utils.getIntFromConfIfNotNull(dsConf, "size", size);
 		if(dsConf.containsKey(".datasources."+dataSourceName+".file")){
 			getDefs();
 			getData();
