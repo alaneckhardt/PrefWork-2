@@ -1,204 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
 	<threads>2</threads>
-	<run>BehaviourAndContent</run>
+	<run>Progol</run>
 	<runs>
 	
-	<BehaviourAndContent>
-			<methods>
-			 <!-- <method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-						<name>Statistical</name>
-					</behaviour>
-					<content>
-						<name>WekaBridge</name>
-						<classifier>weka.classifiers.functions.SMOreg</classifier>
-					</content>
-				</method>				 
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-					</behaviour>
-					<content>	
-						<name>WekaBridge</name>
-						<classifier>weka.classifiers.functions.SMOreg</classifier>
-					</content>
-				</method>	
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>		
-						<name>WekaBridge</name>
-						<classifier>weka.classifiers.functions.SMOreg</classifier>
-					</behaviour>
-					<content>
-						<name>Statistical</name>
-					</content>
-				</method>	 -->
-				
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-						<name>FixedRatings</name>
-						<file>c:\data\datasets\slantour\User1Ratings.csv</file>
-					</behaviour>
-					<content>
-						<name>Statistical</name>
-					</content>
-				</method>			
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-						<name>Statistical</name>
-					</behaviour>
-					<content>
-						<name>Statistical</name>
-					</content>
-				</method>			
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-					</behaviour>
-					<content>
-						<name>Statistical</name>
-					</content>
-				</method>				
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-					</behaviour>
-					<content>
-						<name>FixedRatings</name>
-						<file>c:\data\datasets\slantour\User1Ratings.csv</file>
-					</content>
-				</method>	
-				<!-- 	
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-					</behaviour>
-					<content>
-						<name>WekaBridge</name>
-					<classifier>weka.classifiers.rules.PART</classifier>
-					<wantsNumericClass>false</wantsNumericClass>
-					</content>
-				</method>	
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-					</behaviour>
-					<content>
-						<name>WekaBridge</name>
-					<classifier>weka.classifiers.functions.SMOreg</classifier>
-					</content>
-				</method>	
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-						<name>FixedRatings</name>
-						<file>c:\data\datasets\slantour\User1Ratings.csv</file>
-					</behaviour>
-					<content>
-						<name>WekaBridge</name>
-					<classifier>weka.classifiers.functions.SMOreg</classifier>
-					</content>
-				</method>
-				<method>
-					<name>BehaviourAndContent</name>
-					<behaviour>
-						<name>FixedRatings</name>
-						<file>c:\data\datasets\slantour\User1Ratings.csv</file>
-					</behaviour>
-					<content>
-						<name>WekaBridge</name>
-					<classifier>weka.classifiers.rules.PART</classifier>
-					<wantsNumericClass>false</wantsNumericClass>
-					</content>
-				</method>		-->
-			</methods>
-
-			<dbs>
-			<!--
-			<db>
-			  <name>BehaviourAndContent</name>
-			  <behaviour>
-			  	<name>THMultiUserSource</name>
-			  	<size>100000</size>
-				<datasources>SlanAllBeh</datasources>
-			  </behaviour>
-			  <content>
-			  	<name>THMultiUserSource</name>
-			  	<size>100000</size>
-				<datasources>SlanAll</datasources>
-			  </content>
-				<datasources>Slan</datasources>
-					<name>Slantour</name>
-				<maxSize>200</maxSize>
-				<datasources>SlantourDS</datasources>  
-			</db>-->
-			<!-- <db>
-			  <name>BehaviourAndContent</name>
-			  <behaviour>
-			  	<name>THMultiUserSource</name>
-			  	<size>100000</size>
-				<datasources>SlanFilteredUsersBeh</datasources>
-			  </behaviour>
-			  <content>
-			  	<name>THMultiUserSource</name>
-			  	<size>100000</size>
-				<datasources>SlanFilteredUsers</datasources>
-			  </content>
-				<datasources>Slan</datasources>
-			</db>-->
-			<db>
-			  <name>BehaviourAndContent</name>
-			  <behaviour>
-			  	<name>THMultiUserSource</name>
-			  	<size>100000</size>
-				<datasources>SlanFiltered1UserBeh</datasources>
-			  </behaviour>
-			  <content>
-			  	<name>THMultiUserSource</name>
-			  	<size>100000</size>
-				<datasources>SlanFiltered1User</datasources>
-			  </content>
-				<datasources>Slan</datasources>
-			</db>
-			<db>
-			  <name>BehaviourAndContent</name>
-			  <behaviour>
-			  	<name>THMultiUserSource</name>
-			  	<size>100000</size>
-				<datasources>SlanAllBeh</datasources>
-			  </behaviour>
-			  <content>
-			  	<name>THMultiUserSource</name>
-			  	<size>100000</size>
-				<datasources>SlanAll</datasources>
-			  </content>
-				<datasources>Slan</datasources>
-			</db>
-			</dbs>
-			<tests>
-          		<test>
-	              <class>prefwork.rating.test.BehaviourAndContentTest</class>	
-	               <trainSets>1000,5000,10000,20000</trainSets>
-	              <path>SlanAllDataSources</path>
-	              <numberOfRuns>20</numberOfRuns>
-				  <testInterpreter><class>prefwork.rating.test.TopKStatistics</class>				  
-	              	<topk>500</topk>
-	              </testInterpreter>
-	            </test>   
-			</tests>
-		</BehaviourAndContent>
-		
 	<Progol>
 			<methods>
-				<method>
-					<name>Ideal</name>
-				</method>
-				 
-				<!-- 
 				<method>
 					<name>Statistical</name>
 				</method> 
@@ -213,8 +20,8 @@
 					<name>WekaBridge</name>
 					<classifier>weka.classifiers.functions.SMOreg</classifier>
 				</method>
-				
-				<method>
+				 
+				<!-- <method>
 					<name>Statistical</name>
 					<rater>
 						<class>prefwork.rating.method.rater.MethodRater</class>
@@ -318,7 +125,7 @@
 					    <!-- TH9car,TH10cmc,TH25nursery,TH32post-operative,TH35tae,TH38wine,TH39winequality-red,TH40winequality-white,TH49poker-hand-filtered -->
 				
 			  <name>THMultiUserSource</name>
-				<size>200</size>
+				<size>350</size>
 				<datasources>SlanBeh</datasources>
 					<!--<name>Slantour</name>
 				<maxSize>200</maxSize>

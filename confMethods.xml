@@ -1,18 +1,6 @@
 <methods>
     
     
-	<BehaviourAndContent>
-		<class>prefwork.rating.method.BehaviourAndContentMethod</class>
-					<behaviour>
-					</behaviour>
-					<content>
-						<name>WekaBridge</name>
-						<classifier>weka.classifiers.functions.MultilayerPerceptron</classifier>
-					</content>
-	</BehaviourAndContent>
-	<FixedRatings>
-		<class>prefwork.rating.method.FixedRatings</class>
-	</FixedRatings>
 	<CofiBridge>
 		<class>prefwork.rating.method.CofiBridge</class>
 		<knn>30</knn>
