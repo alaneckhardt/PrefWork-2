@@ -9,8 +9,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import weka.core.Attribute;
-import weka.core.DenseInstance;
-import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SparseInstance;
@@ -158,7 +156,7 @@ public class CSVNoUserDataSource extends ContentDataSource{
 			line = in.readLine();
 			line = in.readLine();
 			int i = 2;
-			FastVector attrs = new FastVector();
+			ArrayList<Attribute> attrs = new ArrayList<Attribute>();
 			/*
 			Attribute attr = new Attribute("userId", 0);
 			attrs.add(attr);
@@ -184,16 +182,16 @@ public class CSVNoUserDataSource extends ContentDataSource{
 				if ("O".equals(attrProp[0])) {
 					attr = new Attribute(attrProp[1], attrCount);
 				} else if ("N".equals(attrProp[0])) {
-					attr = new Attribute(attrProp[1],  (FastVector)null, attrCount);
+					attr = new Attribute(attrProp[1],  (ArrayList<String>)null, attrCount);
 				}else if ("L".equals(attrProp[0])) {
-					FastVector list = new FastVector();
-					list.addElement(new Attribute("list",new FastVector()));
+					ArrayList<Attribute> list = new ArrayList<Attribute>();
+					list.add(new Attribute("list",new ArrayList<String>()));
 					attr = new Attribute(attrProp[1],  new Instances("list"+attrCount, list,10), attrCount);
 				} else if ("R".equals(attrProp[0])) {
 					attr = new Attribute(attrProp[1], attrCount);
 					classIndex = attrCount;
 				}
-				attrs.addElement(attr);
+				attrs.add(attr);
 				i++;
 				attrCount++;
 			}
