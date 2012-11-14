@@ -3,9 +3,8 @@ package prefwork.rating;
 import java.io.Serializable;
 
 import prefwork.core.UserEval;
-import weka.core.DenseInstance;
+import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.SparseInstance;
 
 /**
  * Rating is a numerical evaluation of an object. Typically, the range is 1-5 (stars).
@@ -14,8 +13,12 @@ import weka.core.SparseInstance;
  *
  */
 public class Rating implements UserEval, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6209857552600404810L;
 	/**	Record containing attribute values and class value. */
-	SparseInstance record;
+	Instance record;
 	/** Explicit storage of objectId. It is not contained in record.*/
 	int objectId;
 	/** Explicit storage of userId. It is not contained in record.*/
@@ -33,10 +36,10 @@ public class Rating implements UserEval, Serializable {
 	public double get(int index){
 		return record.value(index);
 	}
-	public SparseInstance getRecord() {
+	public Instance getRecord() {
 		return record;
 	}
-	public void setRecord(SparseInstance record) {
+	public void setRecord(Instance record) {
 		this.record = record;
 		if(record != null)
 			this.record.setDataset(dataset);
