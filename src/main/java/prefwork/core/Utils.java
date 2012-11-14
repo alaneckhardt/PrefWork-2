@@ -30,11 +30,19 @@ import weka.core.Instance;
 
 public abstract class Utils {
 
+	public static void addStringValue(String value, double[] vals, Attribute attr){
+		if(attr.indexOfValue(value)!=-1){
+			vals[attr.index()] = attr.indexOfValue(value);
+		}
+		else
+	     vals[attr.index()] = attr.addStringValue(value);
+	}
 	public static void addStringValue(String value, Instance l, Attribute attr){
+		//value = value.trim().replaceAll("\"", "");
 		if(attr.indexOfValue(value)==-1){
 			attr.addStringValue(value);
 		}
-		l.setValue(attr.index(), value);
+		l.setValue(attr.index(), attr.indexOfValue(value));
 	}
 	public static List<Object> getListFromString(String s){
 			String[]array = s.split(",");
@@ -124,7 +132,7 @@ public abstract class Utils {
 		return array;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public static TestInterpreter getTestInterpreter(XMLConfiguration config,
 			String section) throws SecurityException, ClassNotFoundException,
 			IllegalArgumentException, InstantiationException,
@@ -143,7 +151,7 @@ public abstract class Utils {
 	 * @param className
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public static Object getInstance(String className) {
 		try {
 			Class c = Class.forName(className);
