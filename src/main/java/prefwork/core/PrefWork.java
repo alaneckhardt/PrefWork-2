@@ -25,12 +25,12 @@ public class PrefWork {
 	
 	public static Semaphore semWrite;
 	
-	XMLConfiguration confRuns = new XMLConfiguration();
-	XMLConfiguration confDatasources = new XMLConfiguration();
-	XMLConfiguration confMethods = new XMLConfiguration();
+	public static XMLConfiguration confRuns = new XMLConfiguration();
+	public static XMLConfiguration confDatasources = new XMLConfiguration();
+	public static XMLConfiguration confMethods = new XMLConfiguration();
 
 	@SuppressWarnings("unchecked")
-	public Method getMethod(String methodName)throws SecurityException, ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException{
+	public static Method getMethod(String methodName)throws SecurityException, ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException{
 		Configuration methodConf = confMethods.configurationAt( methodName);
 		String methodClass = methodConf.getString("class");
 
@@ -83,7 +83,7 @@ public class PrefWork {
 	}
 	
 	
-	public DataSource getDataSource(String dataSourceName, String dbName) throws SecurityException, ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException{
+	public static DataSource getDataSource(String dataSourceName, String dbName) throws SecurityException, ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException{
 		Configuration dbConf = confDatasources.configurationAt( dbName);
 		String dbClass = dbConf.getString("class");
 		
