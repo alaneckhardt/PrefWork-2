@@ -1,20 +1,21 @@
 package prefwork.rating.method;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import prefwork.core.Utils;
 import prefwork.core.DataSource;
 import prefwork.core.Method;
 import prefwork.core.UserEval;
+import prefwork.core.Utils;
 import prefwork.rating.Rating;
 import prefwork.rating.datasource.ContentDataSource;
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
-import weka.core.FastVector;
+import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -42,7 +43,7 @@ public class WekaBridge implements Method {
 	List<Integer> indexes;
 	Integer targetAttribute;
 
-	FastVector fvWekaAttributes;
+	ArrayList<Attribute> fvWekaAttributes;
 
 	Instances isTrainingSet;
 
@@ -56,9 +57,8 @@ public class WekaBridge implements Method {
 	 * @return
 	 */
 	protected Instance getWekaInstance(Rating rec) {
-		Instance iExample;
-		iExample = (Instance) rec.getRecord().copy();
-		iExample.setDataset(isTrainingSet);
+		Instance iExample = getInstanceFromIndexes(rec);
+		//iExample = (Instance) rec.getRecord().copy();
 		return iExample;
 	}
 
@@ -69,43 +69,49 @@ public class WekaBridge implements Method {
 	 * @return
 	 */
 	protected Instance getInstanceFromIndexes(Rating rec) {
-		Instance iExample = null;
-		iExample = new Instance(indexes.size());
-
+		double[] vals = new double[isTrainingSet.numAttributes()];
 		
 		for (int i = 0; i < indexes.size(); i++) {
 			try {
 				if(rec.getRecord().isMissing(indexes.get(i)))
 						continue;
-				if (numerical.contains(indexes.get(i)))
-					iExample.setValue(
-							(Attribute) fvWekaAttributes.elementAt(i),rec.get(indexes.get(i)));
+				 if(numerical.contains(indexes.get(i)) && !wantsNumericClass && targetAttribute == indexes.get(i)){
+						Utils.addStringValue(Double.toString(rec.getRecord().value(indexes.get(i))), vals, fvWekaAttributes.get(i));
+						
+					}
+				 else if ( numerical.contains(indexes.get(i)))
+					 vals[i] = rec.get(indexes.get(i));
+				 //iExample.setValue((Attribute) fvWekaAttributes.elementAt(i),rec.get(indexes.get(i)));				
 				else
-					iExample.setValue(
+					Utils.addStringValue(rec.getRecord().stringValue(indexes.get(i)), vals, fvWekaAttributes.get(i));
+					/*iExample.setValue(
 							(Attribute) fvWekaAttributes.elementAt(i), 
-							rec.getRecord().stringValue(indexes.get(i)));
+							rec.getRecord().stringValue(indexes.get(i)));*/
 			} catch (IllegalArgumentException e) {
 				// e.printStackTrace();
 				if (noMissing) {
-					iExample.setValue(
+					/*iExample.setValue(
 							(Attribute) fvWekaAttributes.elementAt(i),
 							((Attribute) fvWekaAttributes.elementAt(i))
-									.value(0));
+									.value(0));*/
 				}
 
 				//System.err.print("" + rec.get(i).toString() + "," + i + "\n");
 			}
 		}
+		Instance iExample = null;
+		iExample = new DenseInstance(isTrainingSet.numAttributes(), vals);
+		iExample.setDataset(isTrainingSet);
+		
 		//Fill the class. Class is always numeric, for the time being.
-		try {
+		/*try {
 			if (wantsNumericClass)
 				iExample.setValue((Attribute) fvWekaAttributes
 						.elementAt(targetAttribute), rec.get(
 								indexes.get(targetAttribute)));
 			else
-				iExample.setValue((Attribute) fvWekaAttributes
-						.elementAt(targetAttribute), rec.get(
-								indexes.get(targetAttribute)));
+				Utils.addStringValue(rec.getRecord().stringValue(indexes.get(targetAttribute)), iExample, (Attribute)fvWekaAttributes.elementAt(targetAttribute));
+			
 		} catch (IllegalArgumentException e) {
 			// e.printStackTrace();
 			if (noMissing) {
@@ -114,19 +120,25 @@ public class WekaBridge implements Method {
 						((Attribute) fvWekaAttributes
 								.elementAt(targetAttribute)).value(0));
 			}
-			/*System.err.print(""
-					+ rec.get(indexes.get(targetAttribute)).toString() + ","
-					+ targetAttribute + "\n");*/
-		}
+		}*/
 
 		return iExample;
 	}
 
-	protected void processAttribute(Rating rec, FastVector vec, int i) {
-		if(rec.getRecord().isMissing(indexes.get(i)))
+	protected void processAttribute(Rating rec, ArrayList<String> vec, int i) {
+		if(rec.getRecord().isMissing(i))
 			return;
-		if (!vec.contains(Double.toString(rec.getRecord().value(indexes.get(i)))))
-			vec.addElement(Double.toString(rec.getRecord().value(indexes.get(i))));
+		//It is nominal, use stringValue
+		if(nominal.contains(indexes.get(i))){
+			if (!vec.contains(rec.getRecord().stringValue(indexes.get(i))))
+				vec.add(rec.getRecord().stringValue(indexes.get(i)));			
+		}
+		//It is numeric we want to treat as nominal.
+		else{
+			if (!vec.contains(Double.toString(rec.getRecord().value(indexes.indexOf(i)))))
+				vec.add(Double.toString(rec.getRecord().value(indexes.indexOf(i))));
+			
+		}
 	}
 
 	protected void getAttributes(DataSource ds, Integer user) {
@@ -135,9 +147,10 @@ public class WekaBridge implements Method {
 		trainingDataset.restart();
 		int size = indexes.size();
 		String[] attributeNames = trainingDataset.getAttributesNames();		
-		FastVector[] vec = new FastVector[size];
+		@SuppressWarnings("unchecked")
+		ArrayList<String>[] vec = new ArrayList[size];
 		for (int i = 0; i < vec.length; i++) {
-			vec[i] = new FastVector();
+			vec[i] = new ArrayList<String>();
 		}
 
 		Rating rec;
@@ -150,21 +163,23 @@ public class WekaBridge implements Method {
 			}
 		}
 
-		fvWekaAttributes = new FastVector(size);
+		fvWekaAttributes = new ArrayList<Attribute>(size);
 		for (int i = 0; i < size; i++) {
 			// Add a nominal attribute
-			if ((vec[i].size() > 0 && !onlyNumericAttributes) || onlyNominalAttributes)
-				fvWekaAttributes.addElement(new Attribute(
+			if ((vec[i].size() > 0 && !onlyNumericAttributes) 
+					|| onlyNominalAttributes)
+				fvWekaAttributes.add(new Attribute(
 						ProgolBridge.transform(attributeNames[indexes.get(i)]), vec[i], i));
 			// Add a numerical attribute
 			else if (!onlyNominalAttributes || ( i == targetAttribute && wantsNumericClass))
-				// fvWekaAttributes.addElement(new Attribute(attributeNames[i],
-				// new FastVector()));
-				fvWekaAttributes.addElement(new Attribute(
+				// fvWekaAttributes.add(new Attribute(attributeNames[i],
+				// new ArrayList()));
+				fvWekaAttributes.add(new Attribute(
 						ProgolBridge.transform(attributeNames[indexes.get(i)]), i));
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected void clear(){
 		nominal = Utils.getList();
 		numerical = Utils.getList();
@@ -260,7 +275,7 @@ public class WekaBridge implements Method {
 				if(wantsNumericClass)
 					res+=fDistribution[i];
 				else
-					res+=Utils.objectToDouble(((Attribute) fvWekaAttributes.elementAt(this.targetAttribute)).value(i))*fDistribution[i];
+					res+=Utils.objectToDouble(fvWekaAttributes.get(this.targetAttribute).value(i))*fDistribution[i];
 			return res;
 		} catch (Exception e) {
 			//e.printStackTrace();
@@ -268,6 +283,7 @@ public class WekaBridge implements Method {
 		return null;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void configClassifier(XMLConfiguration config, String section) {
 		Configuration methodConf = config.configurationAt(section);
 		try {
