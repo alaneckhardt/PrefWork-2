@@ -10,12 +10,9 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import prefwork.core.DataSource;
 import prefwork.core.Utils;
 import prefwork.rating.Rating;
 import weka.core.Attribute;
-import weka.core.DenseInstance;
-import weka.core.FastVector;
 import weka.core.Instances;
 import weka.core.SparseInstance;
 
@@ -122,7 +119,7 @@ public abstract class SQLDataSource extends ContentDataSource {
 		//Surround with try catch to avoid exception in confRuns, where this doen't have to be present
 		try{
 			Configuration dsConf = config.configurationAt(section+".datasources."+dataSourceName);
-			FastVector attrs = new FastVector();
+			ArrayList<Attribute> attrs = new ArrayList<Attribute>();
 			if(dsConf.containsKey("attributes.attribute(" + 0 + ").name")){
 				userColumn = (String) dsConf.getProperty("attributes.attribute(0).name");
 				objectColumn = (String) dsConf.getProperty("attributes.attribute(1).name");
@@ -137,18 +134,18 @@ public abstract class SQLDataSource extends ContentDataSource {
 					if ("numerical".equals(attrType)) {
 						attr = new Attribute(attrName,attrId);
 					} else if ("nominal".equals(attrType)) {
-						attr = new Attribute(attrName, (FastVector) null, attrId);
+						attr = new Attribute(attrName, (ArrayList<String>) null, attrId);
 					} else if ("list".equals(attrType)) {	
-						FastVector list = new FastVector();
-						list.addElement(new Attribute("list",(FastVector)null));
+						ArrayList<Attribute> list = new ArrayList<Attribute>();
+						list.add(new Attribute("list",(ArrayList<String>)null));
 						attr = new Attribute(attrName,  new Instances("list"+attrId, list,0), attrId);			
 					}
-					attrs.addElement(attr);
+					attrs.add(attr);
 					attrId++;
 				}
 				attributes = new Attribute[attrs.size()];
 				for (int i = 0; i < attributes.length; i++) {
-					attributes[i] = (Attribute) attrs.elementAt(i);
+					attributes[i] = (Attribute) attrs.get(i);
 				}
 				instances = new Instances("name", attrs,0);
 				instances.setClassIndex(0);

@@ -8,14 +8,12 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.XMLConfiguration;
 
+import prefwork.core.Utils;
+import prefwork.rating.Rating;
 import weka.core.Attribute;
-import weka.core.DenseInstance;
-import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SparseInstance;
-import prefwork.core.Utils;
-import prefwork.rating.Rating;
 
 public class THDataSource extends ContentDataSource{
 
@@ -35,7 +33,9 @@ public class THDataSource extends ContentDataSource{
 		if(rec.length<2)
 			return null;
 		Rating r = new Rating(instances);
-		r.setRecord(new SparseInstance(instances.numAttributes()));
+
+		double[] vals = new double[instances.numAttributes()];
+		
 		int j = 0;
 		//UserId
 		if(hasUserId){
@@ -53,7 +53,6 @@ public class THDataSource extends ContentDataSource{
 		else
 			r.setObjectId(i);
 
-		boolean nullFound = false;
 		int index = 0;
 		for (; j < rec.length; j++) {
 			if(ignoreList.contains(j+2)){
@@ -72,29 +71,30 @@ public class THDataSource extends ContentDataSource{
 										
 			}
 			else if("?".equals(rec[j]) ){
-					nullFound = true;	
 					if(!allowNulls)
 						return null;
-					r.getRecord().setValue(index,null);
+					vals[index] = weka.core.Utils.missingValue();
 				}
 			else if(instances.attribute(index).isNumeric()){
 				try {
-				r.getRecord().setValue(index, Utils.objectToDouble(rec[j]));
+					vals[index] =  Utils.objectToDouble(rec[j]);
 				} catch (Exception e) {
-					r.getRecord().setValue(index, rec[j]);
+					e.printStackTrace();
+					//vals[index] =  rec[j];
 				}
 			}
 			else{
 				try {
-
-					Utils.addStringValue(rec[j], r.getRecord(), instances.attribute(index));
+					Utils.addStringValue(rec[j], vals, instances.attribute(index));
 				} catch (Exception e) {
-					r.getRecord().setValue(index, rec[j]);
+					e.printStackTrace();
+					//r.getRecord().setValue(index, rec[j]);
 				}
 				
 			}
 			index++;
 		}
+		r.setRecord(new SparseInstance(instances.numAttributes(), vals));
 		return r;
 	}
 	public void loadClasses(Rating[] userRecords){
@@ -158,7 +158,7 @@ public class THDataSource extends ContentDataSource{
 			line = in.readLine();
 			line = in.readLine();
 			int i = 2;
-			FastVector attrs = new FastVector();
+			ArrayList<Attribute> attrs = new ArrayList<Attribute>();
 			/*
 			Attribute attr = new Attribute("userId", 0);
 			attrs.add(attr);
@@ -184,16 +184,16 @@ public class THDataSource extends ContentDataSource{
 				if ("O".equals(attrProp[0])) {
 					attr = new Attribute(attrProp[1], attrCount);
 				} else if ("N".equals(attrProp[0])) {
-					attr = new Attribute(attrProp[1],  (FastVector)null, attrCount);
+					attr = new Attribute(attrProp[1],  (ArrayList<String>)null, attrCount);
 				}else if ("L".equals(attrProp[0])) {
-					FastVector list = new FastVector();
-					list.addElement(new Attribute("list",new FastVector()));
+					ArrayList<Attribute> list = new ArrayList<Attribute>();
+					list.add(new Attribute("list",new ArrayList<String>()));
 					attr = new Attribute(attrProp[1],  new Instances("list"+attrCount, list,10), attrCount);
 				} else if ("R".equals(attrProp[0])) {
 					attr = new Attribute(attrProp[1], attrCount);
 					classIndex = attrCount;
 				}
-				attrs.addElement(attr);
+				attrs.add(attr);
 				i++;
 				attrCount++;
 			}
