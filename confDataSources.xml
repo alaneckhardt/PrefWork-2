@@ -9,12 +9,36 @@
       
             
       
+<BehaviourAndContent>
+<class>prefwork.rating.datasource.BehaviourAndContentData</class>
+
+  <behaviour><name>THMultiUserSource</name>
+			  	<size>200</size>
+				<datasources>SlanBeh</datasources>
+  </behaviour>
+  <content><name>THMultiUserSource</name>
+			  	<size>200</size>
+				<datasources>Slan</datasources>
+  </content>  
+</BehaviourAndContent>
+
+
 <THMultiUserSource>
   <class>prefwork.rating.datasource.THMultiUserDataSource</class>
   <datasources>
    <TH50sushi><file>C:\data\datasets\THSources\OKSushi\sushi</file></TH50sushi>
 	 <Slan><file>c:\data\datasets\slantour\testSlan</file></Slan>
 	 <SlanBeh><file>c:\data\datasets\slantour\testSlanBehaviour</file></SlanBeh>
+	 <SlanAll><file>c:\data\datasets\slantour\contentAll</file></SlanAll>
+	 <SlanAllBeh><file>c:\data\datasets\slantour\behaviourAll</file></SlanAllBeh>
+	 <SlanAllUsers><file>c:\data\datasets\slantour\contentAllUsers</file></SlanAllUsers>
+	 <SlanAllUsersBeh><file>c:\data\datasets\slantour\behaviourAllUsers</file></SlanAllUsersBeh>
+	 
+	 <SlanFiltered1User><file>c:\data\datasets\slantour\contentFiltered1User</file></SlanFiltered1User>
+	 <SlanFiltered1UserBeh><file>c:\data\datasets\slantour\behaviourFiltered1User</file></SlanFiltered1UserBeh>
+	 
+	 <SlanFilteredUsers><file>c:\data\datasets\slantour\contentFilteredUsers</file></SlanFilteredUsers>
+	 <SlanFilteredUsersBeh><file>c:\data\datasets\slantour\behaviourFilteredUsers</file></SlanFilteredUsersBeh>
 	 </datasources>
 </THMultiUserSource>
 <THSource>
