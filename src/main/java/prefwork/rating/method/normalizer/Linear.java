@@ -13,7 +13,6 @@ import prefwork.rating.method.ContentBased;
 import weka.classifiers.functions.LinearRegression;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
-import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SparseInstance;
@@ -23,7 +22,7 @@ public class Linear implements Normalizer {
 	weka.classifiers.functions.LinearRegression lg = new LinearRegression();
 	//weka.classifiers.functions.SMOreg lg = new weka.classifiers.functions.SMOreg();
 	Instances isTrainingSet;
-	FastVector fvWekaAttributes;
+	ArrayList<Attribute> fvWekaAttributes;
 	Attribute attr;
 	Instances representants;
 	double[] coefficients;
@@ -77,7 +76,7 @@ public class Linear implements Normalizer {
 		Instance iExample = new Instance(2);
 		iExample.setDataset(isTrainingSet);
 		iExample.setValue((weka.core.Attribute) fvWekaAttributes
-				.elementAt(0), CommonUtils.objectToDouble(record.get(index)));*/
+				.get(0), CommonUtils.objectToDouble(record.get(index)));*/
 
 		try {
 			//return lg.classifyInstance(iExample);
@@ -104,9 +103,9 @@ public class Linear implements Normalizer {
 		coefficients = null;
 		lg = new LinearRegression();
 		index = attrIndex;
-		fvWekaAttributes = new FastVector(2);
-		fvWekaAttributes.addElement(new weka.core.Attribute("X"));
-		fvWekaAttributes.addElement(new weka.core.Attribute("Rating"));
+		fvWekaAttributes = new ArrayList<Attribute>(2);
+		fvWekaAttributes.add(new weka.core.Attribute("X"));
+		fvWekaAttributes.add(new weka.core.Attribute("Rating"));
 
 		isTrainingSet = new Instances("Rel", fvWekaAttributes, 10);
 		isTrainingSet.setClassIndex(1);
@@ -116,8 +115,8 @@ public class Linear implements Normalizer {
 	public void addValue(Rating r) {
 		Instance iExample = new SparseInstance(2);
 		iExample.setDataset(isTrainingSet);
-		iExample.setValue((weka.core.Attribute) fvWekaAttributes.elementAt(0), Utils.objectToDouble(r.getRecord().value(index)));
-		iExample.setValue((weka.core.Attribute) fvWekaAttributes.elementAt(1), r.getRating());
+		iExample.setValue((weka.core.Attribute) fvWekaAttributes.get(0), Utils.objectToDouble(r.getRecord().value(index)));
+		iExample.setValue((weka.core.Attribute) fvWekaAttributes.get(1), r.getRating());
 		isTrainingSet.add(iExample);		
 	}
 	@Override

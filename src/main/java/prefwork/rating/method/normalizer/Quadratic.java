@@ -13,7 +13,6 @@ import prefwork.rating.method.ContentBased;
 import weka.classifiers.functions.LinearRegression;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
-import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SparseInstance;
@@ -23,7 +22,7 @@ public class Quadratic extends Linear{
 
 	/*weka.classifiers.functions.LinearRegression lg = new LinearRegression();
 	Instances isTrainingSet;
-	FastVector fvWekaAttributes;
+	ArrayList fvWekaAttributes;
 	Attribute attr;
 	int numberOfClusters = 0;
 	int index;
@@ -69,11 +68,11 @@ public class Quadratic extends Linear{
 		Instance iExample = new Instance(3);
 		iExample.setDataset(isTrainingSet);		
 		iExample.setValue(
-				(weka.core.Attribute) fvWekaAttributes.elementAt(0), 
+				(weka.core.Attribute) fvWekaAttributes.get(0), 
 				Double.parseDouble(o.get(index).toString()));
 
 		iExample.setValue(
-				(weka.core.Attribute) fvWekaAttributes.elementAt(1), 
+				(weka.core.Attribute) fvWekaAttributes.get(1), 
 				Math.pow(Double.parseDouble(o.get(index).toString()),2));
 		
 		double[] fDistribution;
@@ -103,11 +102,11 @@ public class Quadratic extends Linear{
 		Instance iExample = new SparseInstance(2);
 		iExample.setDataset(isTrainingSet);
 		iExample.setValue((weka.core.Attribute) fvWekaAttributes
-				.elementAt(0), Utils.objectToDouble(r.getRecord().value(index)));
+				.get(0), Utils.objectToDouble(r.getRecord().value(index)));
 		iExample.setValue((weka.core.Attribute) fvWekaAttributes
-				.elementAt(1), Utils.objectToDouble(r.getRecord().value(index))*Utils.objectToDouble(r.getRecord().value(index)));
+				.get(1), Utils.objectToDouble(r.getRecord().value(index))*Utils.objectToDouble(r.getRecord().value(index)));
 		iExample.setValue((weka.core.Attribute) fvWekaAttributes
-				.elementAt(2), r.getRating());
+				.get(2), r.getRating());
 		isTrainingSet.add(iExample);		
 	}
 	
@@ -115,10 +114,10 @@ public class Quadratic extends Linear{
 		coefficients = null;
 		lg = new LinearRegression();
 		index = attrIndex;
-		fvWekaAttributes = new FastVector(3);
-		fvWekaAttributes.addElement(new weka.core.Attribute("X"));
-		fvWekaAttributes.addElement(new weka.core.Attribute("X^2"));
-		fvWekaAttributes.addElement(new weka.core.Attribute("Rating"));
+		fvWekaAttributes = new ArrayList<Attribute>(3);
+		fvWekaAttributes.add(new weka.core.Attribute("X"));
+		fvWekaAttributes.add(new weka.core.Attribute("X^2"));
+		fvWekaAttributes.add(new weka.core.Attribute("Rating"));
 		
 		
 		isTrainingSet = new Instances("Rel", fvWekaAttributes, 10);

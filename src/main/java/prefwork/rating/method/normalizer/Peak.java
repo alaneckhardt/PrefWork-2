@@ -1,5 +1,6 @@
 package prefwork.rating.method.normalizer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.configuration.XMLConfiguration;
@@ -9,9 +10,7 @@ import prefwork.rating.Rating;
 import prefwork.rating.datasource.ContentDataSource;
 import prefwork.rating.method.ContentBased;
 import weka.classifiers.functions.LinearRegression;
-import weka.clusterers.SimpleKMeans;
-import weka.core.DenseInstance;
-import weka.core.FastVector;
+import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SparseInstance;
@@ -30,7 +29,7 @@ public class Peak implements Normalizer {
 	Instances isTrainingSet;
 	Instances isTrainingSet1;
 	Instances isTrainingSet2;
-	FastVector fvWekaAttributes;
+	ArrayList<Attribute> fvWekaAttributes;
 	Instances representants1;
 	Instances representants2;
 	double cutValue;
@@ -158,7 +157,7 @@ public class Peak implements Normalizer {
 		iExample.setDataset(isTrainingSet1);
 		try {
 			iExample.setValue((weka.core.Attribute) fvWekaAttributes
-					.elementAt(0), val);
+					.get(0), val);
 			double[] fDistribution;
 			if (val <= cutValue)
 				fDistribution = lg1.distributionForInstance(iExample);
@@ -193,9 +192,9 @@ public class Peak implements Normalizer {
 		Instance iExample = new SparseInstance(2);
 		iExample.setDataset(isTrainingSet1);
 		iExample.setValue((weka.core.Attribute) fvWekaAttributes
-				.elementAt(0), d);
+				.get(0), d);
 		iExample.setValue((weka.core.Attribute) fvWekaAttributes
-				.elementAt(1), r.getRating());
+				.get(1), r.getRating());
 		isTrainingSet1.add(iExample);
 		isTrainingSet.add(iExample);
 	}
@@ -205,9 +204,9 @@ public class Peak implements Normalizer {
 	}
 	public void init(ContentDataSource data, ContentBased method, int attrIndex) {
 		index = attrIndex;
-		fvWekaAttributes = new FastVector(2);
-		fvWekaAttributes.addElement(new weka.core.Attribute("X"));
-		fvWekaAttributes.addElement(new weka.core.Attribute("Rating"));
+		fvWekaAttributes = new ArrayList<Attribute>(2);
+		fvWekaAttributes.add(new weka.core.Attribute("X"));
+		fvWekaAttributes.add(new weka.core.Attribute("Rating"));
 
 		isTrainingSet = new Instances("Rel", fvWekaAttributes, 10);
 		isTrainingSet.setClassIndex(1);

@@ -7,17 +7,12 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import prefwork.core.Method;
 import prefwork.core.Utils;
 import prefwork.rating.Rating;
 import prefwork.rating.datasource.ContentDataSource;
 import prefwork.rating.datasource.THDataSource;
 import prefwork.rating.method.ContentBased;
-
-import weka.classifiers.Classifier;
 import weka.core.Attribute;
-import weka.core.FastVector;
-import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SparseInstance;
 
@@ -28,14 +23,14 @@ public class MethodRater implements Rater {
 	String methodName = "";
 	Integer targetAttribute = 2;
 	Instances attributes, newInstances;
-	FastVector fvWekaAttributes;
+	ArrayList<Attribute> fvWekaAttributes;
 	Instances isTrainingSet;
 	int userId = -1;
 	//double[] classes;
 	public String toString(){		
 		return "MethodRaterNoNull"+method.toString();
 	}
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void configClassifier(XMLConfiguration config, String section) {
 		Configuration methodConf = config.configurationAt(section);
@@ -79,7 +74,6 @@ public class MethodRater implements Rater {
 		Rating[][] userRecords;
 		List<Rating> recs = Utils.getList();
 		// this.classes = new double[];
-		int i = 0;
 		while (data.hasNext()) {
 			Rating r = (Rating) data.next();
 
@@ -99,7 +93,6 @@ public class MethodRater implements Rater {
 			recs.add(newR);
 
 			// this.classes[i]=Utils.objectToDouble(val.getValue());
-			i++;
 		}
 		userRecords = new Rating[1][recs.size()];
 
@@ -111,9 +104,9 @@ public class MethodRater implements Rater {
 	//	this.method = method;
 		this.attributes = data.getInstances();
 		THDataSource source = new THDataSource();
-		FastVector newAttributes = new FastVector(attributes.numAttributes());
+		ArrayList<Attribute> newAttributes = new ArrayList<Attribute>(attributes.numAttributes());
 		for (int i = 0; i < attributes.numAttributes(); i++) {
-			newAttributes.addElement(new Attribute(attributes.attribute(i).name()));
+			newAttributes.add(new Attribute(attributes.attribute(i).name()));
 		}		
 		newInstances = new Instances("Inner",newAttributes,attributes.numInstances());
 		newInstances.setClassIndex(attributes.classIndex());
