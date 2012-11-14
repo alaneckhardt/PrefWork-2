@@ -40,6 +40,7 @@ public class BehaviourAndContentTest implements Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		resultsInterpreter.setFilePrefix(testConf.getString("path"));
 
 	}
@@ -108,8 +109,15 @@ public class BehaviourAndContentTest implements Test {
 		}
 	}
 
-	
-	protected void testStandard(BehaviourAndContentMethod ind, BehaviourAndContentData dataSource, List<Integer> userIds, int trainSet, int runInner){
+	/**
+	 * Runs one test for all users from the dataset. The settings of the datasource are given as parameters.
+	 * @param ind
+	 * @param dataSource
+	 * @param userIds
+	 * @param trainSet
+	 * @param runInner
+	 */
+	protected void testOneRun(BehaviourAndContentMethod ind, BehaviourAndContentData dataSource, List<Integer> userIds, int trainSet, int runInner){
 		dataSource.getBehaviour().restartUserId();	
 		dataSource.getContent().restartUserId();
 		for (int i = 0; i < userIds.size(); i++) {
@@ -120,28 +128,31 @@ public class BehaviourAndContentTest implements Test {
 			
 			configTrainDatasource(dataSource.getBehaviour(), runInner, trainSet, size);
 			configTrainDatasource(dataSource.getContent(), runInner, trainSet, size);
-			Long startBuildUser = System.currentTimeMillis();
-			int trainCount = ind.getBehaviour().buildModel(dataSource.getBehaviour(), userId);
-			results.setTrainCount(userId,  run,trainCount);
-			Long endBuildUser = System.currentTimeMillis();startBuildUser = System.currentTimeMillis();
-
-			//Fill the ratings of content with predicted ratings from behaviour.
-			dataSource.usePredictedRatingsForContent(ind.getBehaviour());
-			
+			Long startBuildUser, endBuildUser;
+			int trainCount;
+			if(ind.getBehaviour() != null){
+				startBuildUser = System.currentTimeMillis();
+				trainCount = ind.getBehaviour().buildModel(dataSource.getBehaviour(), userId);
+				results.setTrainCount(userId,  run,trainCount);
+				endBuildUser = System.currentTimeMillis();startBuildUser = System.currentTimeMillis();
+	
+				//Fill the ratings of content with predicted ratings from behaviour.
+				dataSource.usePredictedRatingsForContent(ind.getBehaviour());
+			}
 			startBuildUser = System.currentTimeMillis();
 			trainCount = ind.getContent().buildModel(dataSource.getContent(), userId);
 			results.setTrainCount(userId,  run,trainCount);
 			endBuildUser = System.currentTimeMillis();
 			results.addBuildTimeUser(userId, run, endBuildUser - startBuildUser);
-
-			//TODO - replace back the ratings to user ratings.
-			dataSource.useUserRatingsForContent();
-			
+			if(ind.getBehaviour() != null){				
+				//Replace back the ratings to user ratings.
+				dataSource.useUserRatingsForContent();
+			}
 			dataSource.getBehaviour().setFixedUserId(userId);
 			dataSource.getContent().setFixedUserId(userId);
 			
 			//Testing behaviour
-			size = dataSource.getBehaviour().size();
+			/*size = dataSource.getBehaviour().size();
 			log.debug("userId "+userId+", tr "+trainSet);
 			if(trainSet > size)
 				continue;
@@ -151,18 +162,18 @@ public class BehaviourAndContentTest implements Test {
 			configTestDatasource(dataSource.getBehaviour(), runInner, trainSet, size);
 			testMethod(ind.getBehaviour(), userId,dataSource.getBehaviour(),0);
 			endBuildUser = System.currentTimeMillis();
-			results.addTestTimeUser(userId, run, endBuildUser-startBuildUser);
+			results.addTestTimeUser(userId, run, endBuildUser-startBuildUser);*/
 			
 			//Testing content
-			size = dataSource.getBehaviour().size();
+			size = dataSource.getContent().size();
 			log.debug("userId "+userId+", tr "+trainSet);
 			if(trainSet > size)
 				continue;
 			if(userId%10 == 0)
 				log.debug("User "+userId+" tested.");
 			startBuildUser = System.currentTimeMillis();
-			configTestDatasource(dataSource.getBehaviour(), runInner, trainSet, size);
-			testMethod(ind.getBehaviour(), userId,dataSource.getBehaviour(),0);
+			configTestDatasource(dataSource.getContent(), runInner, trainSet, size);
+			testMethod(ind.getContent(), userId,dataSource.getContent(),0);
 			endBuildUser = System.currentTimeMillis();
 			results.addTestTimeUser(userId, run, endBuildUser-startBuildUser);
 			
@@ -174,7 +185,7 @@ public class BehaviourAndContentTest implements Test {
 		// ContentDataSource trainDataSource =
 		// (ContentDataSource)trainDataSource2;
 		resultsInterpreter.setHeaderPrefix("date;ratio;dataset;method;");
-		results = new TestResults(trainDataSource);
+		results = new TestResults(trainDataSource.getContent());
 		//Start with behaviour dataset to get the users.
 		trainDataSource.useBehaviour();
 		log.info("Testing method " + m.toString());
@@ -198,7 +209,7 @@ public class BehaviourAndContentTest implements Test {
 				trainDataSource.getContent().shuffleInstances();
 				int runInner = 0;
 				while (((runInner + 1) * trainSet <= size || size == 0) && run < numberOfRuns) {
-					testStandard(m, trainDataSource, userIds, trainSet, runInner);
+					testOneRun(m, trainDataSource, userIds, trainSet, runInner);
 					run++;
 					runInner++;
 					synchronized (PrefWork.semWrite) {
@@ -213,7 +224,7 @@ public class BehaviourAndContentTest implements Test {
 			}
 		}
 		log.info("Ended method " + m.toString());
-		System.gc();
+		System.gc();		
 	}
 
 	@Override

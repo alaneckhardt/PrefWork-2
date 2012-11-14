@@ -2,9 +2,11 @@ package prefwork.rating.datasource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import com.planetj.taste.impl.model.GenericItem;
@@ -12,6 +14,8 @@ import com.planetj.taste.impl.model.GenericPreference;
 import com.planetj.taste.model.Preference;
 
 import prefwork.core.DataSource;
+import prefwork.core.Method;
+import prefwork.core.PrefWork;
 import prefwork.core.UserEval;
 import prefwork.core.Utils;
 import prefwork.rating.Rating;
@@ -52,7 +56,7 @@ public class BehaviourAndContentData implements DataSource{
 		this.content = content;
 	}
 
-	public void usePredictedRatingsForContent(ContentBased m){
+	public void usePredictedRatingsForContent(Method m){
 		//Store the original ratings in the map.
 		Integer userIdDataset;
 		content.restartUserId();
@@ -83,7 +87,8 @@ public class BehaviourAndContentData implements DataSource{
 			Rating rec;
 			while ((rec = (Rating)content.next()) != null) {
 				Double r = (Double)m.classifyRecord(rec);
-				rec.setRating(r);
+				if(r != null)
+					rec.setRating(r);
 			}
 		}
 	}
@@ -195,14 +200,26 @@ public class BehaviourAndContentData implements DataSource{
 
 	@Override
 	public void configDataSource(XMLConfiguration config, String section, String dataSourceName) {
-			behaviour.configDataSource(config, section+".behaviour", dataSourceName);
+
+		try {
+			Configuration methodConf = config.configurationAt(section);
+
+			List<String> datasourcesContent = methodConf.getList("content.datasources");
+			List<String> datasourcesBehaviour = methodConf.getList("behaviour.datasources");
+			behaviour = (ContentDataSource)PrefWork.getDataSource(datasourcesBehaviour.get(0),methodConf.getString("behaviour.name"));		
+			content = (ContentDataSource)PrefWork.getDataSource(datasourcesContent.get(0),methodConf.getString("content.name"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		behaviour.configDataSource(config, section+".behaviour", dataSourceName);
 			content.configDataSource(config, section+".content", dataSourceName);
 	}
 
 	@Override
 	public String getName() {
-		if(name != null)
-			return name;
+		//if(name != null)
+		//	return name;
 		return behaviour.getName()+content.getName();
 	}
 
