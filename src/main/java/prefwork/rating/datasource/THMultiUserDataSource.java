@@ -1,12 +1,16 @@
 package prefwork.rating.datasource;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.configuration.Configuration;
@@ -15,8 +19,10 @@ import org.apache.commons.configuration.XMLConfiguration;
 import prefwork.core.Utils;
 import prefwork.rating.Rating;
 import weka.core.Attribute;
+import weka.core.Instance;
 
 public class THMultiUserDataSource extends THDataSource{	
+	int minRatings = 0;
 	protected void getData() {
 		try {
 			maxLoad = 10000;
@@ -26,7 +32,7 @@ public class THMultiUserDataSource extends THDataSource{
 			int i = 0;
 			double max = Double.MIN_VALUE,min = Double.MAX_VALUE;
 			HashMap<Integer,List<Rating>> userRecords = new HashMap<Integer, List<Rating>>();
-			while ((line = in.readLine()) != null && i < maxLoad) {
+			while ((line = in.readLine()) != null) {
 				Rating r = processOneLine(line, i);
 				if(r == null)
 					continue;
@@ -44,24 +50,34 @@ public class THMultiUserDataSource extends THDataSource{
 			in.close();
 			add = -min ;
 			coef = 4/(max-min);
+			//Go through users and filter out those with small amount of ratings.
+			Integer[] ids = new Integer[userRecords.keySet().size()];
+			ids = userRecords.keySet().toArray(ids);
+			for (Integer userId : ids) {
+				if(userRecords.get(userId).size() < minRatings)
+					userRecords.remove(userId);
+			}
+			
 			this.userRecords = new Rating[userRecords.size()][];
 			int j = 0;
-			//Renumbering the users
+			i = 0;
 			for (Integer userId : userRecords.keySet()) {
-				this.userRecords[j]=new Rating[userRecords.get(userId).size()];
-				for (int j2 = 0; j2 < this.userRecords[j].length; j2++) {
-					this.userRecords[j][j2]=userRecords.get(userId).get(j2);		
-					this.userRecords[j][j2].setUserId(j);				
+				//int newUserId = userMap.get(userId);
+				int newUserId = i;
+				this.userRecords[newUserId]=new Rating[userRecords.get(userId).size()];
+				for (int j2 = 0; j2 < this.userRecords[newUserId].length; j2++) {
+					this.userRecords[newUserId][j2]=userRecords.get(userId).get(j2);				
 				}				
-				j++;
+				i++;
 			}
+			
 			userCount = userRecords.size();
 			shuffleInstances();
 			List<Double> classes = Utils.getList();
 				for (j = 0; j < this.userRecords.length; j++) {
 					for (int j2 = 0; j2 < this.userRecords[j].length; j2++) {
 						Rating rec = this.userRecords[j][j2];	
-						double r= Utils.objectToDouble(rec.get(2));
+						double r= rec.getRating();
 						if(!classes.contains((r+add)*coef+1)){
 							classes.add((r+add)*coef+1);					
 						}
@@ -175,8 +191,9 @@ public class THMultiUserDataSource extends THDataSource{
 	}
 	public void configDataSource(XMLConfiguration config, String section, String dataSourceName) {
 		Configuration dsConf = config.configurationAt(section);
+		userCount =  Utils.getIntFromConfIfNotNull(dsConf, "datasources."+dataSourceName+".userCount", userCount);
+		minRatings =  Utils.getIntFromConfIfNotNull(dsConf, "datasources."+dataSourceName+".minRatings", minRatings);
 		super.configDataSource(config, section, dataSourceName);
-		userCount =  Utils.getIntFromConfIfNotNull(dsConf, ".datasources."+dataSourceName+".userCount", userCount);
 	}
 
 }
