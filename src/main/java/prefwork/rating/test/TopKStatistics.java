@@ -103,9 +103,11 @@ public class TopKStatistics extends TestInterpreter {
 			int j = DataMiningStatistics.findObject(array1[i].objectId, array2);
 			if(j != -1 && array2[j].rating == 5.0){
 				count++;
-				positionsSum+=i;
+				positionsSum+=i+1;
 			}
 		}
+		if(positionsSum == 0)
+			positionsSum = array1.length;
 		return 1.0*count;
 	}
 
