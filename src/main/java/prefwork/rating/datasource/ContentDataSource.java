@@ -14,7 +14,7 @@ public abstract class ContentDataSource implements DataSource{
 	protected String[] names = null;
 
 	protected String[] attributeNames;
-	protected long seed;
+	protected long seed = 875;
 	protected int from, to; 
 	
 
@@ -190,5 +190,7 @@ public abstract class ContentDataSource implements DataSource{
 		currentUser = userId;		
 	}
 
-
+	public int getCurrentUser() {
+		return currentUser;
+	}
 }
