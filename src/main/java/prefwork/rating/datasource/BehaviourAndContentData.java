@@ -59,6 +59,8 @@ public class BehaviourAndContentData implements DataSource{
 	public void usePredictedRatingsForContent(Method m){
 		//Store the original ratings in the map.
 		Integer userIdDataset;
+		int current = content.getCurrentUser();
+		usersRatings = new HashMap<Integer, Map<Integer, Double>>();
 		content.restartUserId();
 		while( (userIdDataset= content.userId())!=null){
 			content.setFixedUserId(userIdDataset);
@@ -91,10 +93,12 @@ public class BehaviourAndContentData implements DataSource{
 					rec.setRating(r);
 			}
 		}
+		content.setFixedUserId(current);
 	}
 	public void useUserRatingsForContent(){
 		//Use the user's ratings
 		Integer userIdDataset;
+		int current = content.getCurrentUser();
 		content.restartUserId();
 		while( (userIdDataset= content.userId())!=null){
 			content.setFixedUserId(userIdDataset);
@@ -107,7 +111,8 @@ public class BehaviourAndContentData implements DataSource{
 				int objectId = rec.getObjectId();
 				rec.setRating(usersRatings.get(userId).get(objectId));
 			}
-		}		
+		}
+		content.setFixedUserId(current);
 	}
 	
 	@Override
@@ -208,12 +213,12 @@ public class BehaviourAndContentData implements DataSource{
 			List<String> datasourcesBehaviour = methodConf.getList("behaviour.datasources");
 			behaviour = (ContentDataSource)PrefWork.getDataSource(datasourcesBehaviour.get(0),methodConf.getString("behaviour.name"));		
 			content = (ContentDataSource)PrefWork.getDataSource(datasourcesContent.get(0),methodConf.getString("content.name"));
+			behaviour.configDataSource(config, section+".behaviour", datasourcesBehaviour.get(0));
+			content.configDataSource(config, section+".content", datasourcesContent.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 		
-		behaviour.configDataSource(config, section+".behaviour", dataSourceName);
-			content.configDataSource(config, section+".content", dataSourceName);
 	}
 
 	@Override
