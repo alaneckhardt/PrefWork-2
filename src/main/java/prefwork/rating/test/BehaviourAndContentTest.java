@@ -117,6 +117,25 @@ public class BehaviourAndContentTest implements Test {
 		testDataSource.setFixedUserId(userId);
 
 	}
+	
+	/**
+	 * Configures the datasource so that in test and train sets is at least on positive rating.
+	 * @param dataSource
+	 * @return
+	 */
+	protected boolean checkDataSource(DataSource dataSource, int runInner, int trainSet){
+		configTrainDatasource(dataSource, runInner, trainSet, size);
+		Integer[] classesTrain = getClassesCounts(dataSource);
+		configTestDatasource(dataSource, runInner, trainSet, size);
+		Integer[] classesTest = getClassesCounts(dataSource);
+		while (!checkClasses(classesTrain,false) || !checkClasses(classesTest,false)) {
+			dataSource.shuffleInstances();		configTrainDatasource(dataSource, runInner, trainSet, size);
+			classesTrain = getClassesCounts(dataSource);
+			configTestDatasource(dataSource, runInner, trainSet, size);
+			classesTest = getClassesCounts(dataSource);
+		}		
+		return true;
+	}
 
 	/**
 	 * Runs one test for all users from the dataset. The settings of the datasource are given as parameters.
@@ -151,15 +170,9 @@ public class BehaviourAndContentTest implements Test {
 			while (((runInner + 1) * trainSet <= size - 1 || size == 0) && run < numberOfRuns) {
 
 				size = dataSource.size();
-
-				configTrainDatasource(dataSource.getBehaviour(), runInner, trainSet, size);
-				configTrainDatasource(dataSource.getContent(), runInner, trainSet, size);
-				while (!checkClasses(getClassesCounts(dataSource.getBehaviour()),false)) {
-					dataSource.getBehaviour().shuffleInstances();
-				}
-				while (!checkClasses(getClassesCounts(dataSource.getContent()),false)) {
-					dataSource.getContent().shuffleInstances();
-				}
+				checkDataSource(dataSource.getBehaviour(),runInner, trainSet);
+				checkDataSource(dataSource.getContent(),runInner, trainSet);
+				
 				Long startBuildUser, endBuildUser;
 				int trainCount;
 				if (ind.getBehaviour() != null) {
@@ -193,11 +206,7 @@ public class BehaviourAndContentTest implements Test {
 					continue;
 				if (userId % 10 == 0)
 					log.debug("User " + userId + " tested.");
-				startBuildUser = System.currentTimeMillis();
-				configTestDatasource(dataSource.getContent(), runInner, trainSet, size);
-				if (!checkClasses(getClassesCounts(dataSource.getContent()),false)) {
-					break;
-				}
+				startBuildUser = System.currentTimeMillis();				
 				testMethod(ind.getContent(), userId, dataSource.getContent(), 0);
 				endBuildUser = System.currentTimeMillis();
 				results.addTestTimeUser(userId, run, endBuildUser - startBuildUser);
