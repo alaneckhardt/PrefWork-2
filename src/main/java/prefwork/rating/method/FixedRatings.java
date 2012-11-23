@@ -19,7 +19,7 @@ public class FixedRatings extends ContentBased {
 	Map<Integer,Map<Integer, Double>> ratings;
 	String file;
 	public String toString() {
-		return "FixedRatings";
+		return "FixedRatings"+file.substring(file.lastIndexOf('\\'));
 	}
 
 	/**
