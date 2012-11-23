@@ -10,6 +10,9 @@
 						<classifier>weka.classifiers.functions.MultilayerPerceptron</classifier>
 					</content>
 	</BehaviourAndContent>
+	<Random>
+		<class>prefwork.rating.method.Random</class>
+	</Random>
 	<FixedRatings>
 		<class>prefwork.rating.method.FixedRatings</class>
 	</FixedRatings>
