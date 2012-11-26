@@ -1,7 +1,7 @@
 package prefwork.rating.method.rater.fuzzy;
 
 public final class BaseFunctions {
-	public static final double MAX_VALUE = Math.pow(10, 20);
+	public static final double MAX_VALUE = 100;
 	public static final double Epsilon = 0.000000001;
 	public static double log(double d, double base) {
 		return Math.log(d) / Math.log(base);

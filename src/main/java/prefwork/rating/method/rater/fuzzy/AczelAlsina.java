@@ -25,7 +25,7 @@ public class AczelAlsina implements Family {
 	}
 	@Override
 	public double getMaxLambda() {
-		return 50;
+		return BaseFunctions.MAX_VALUE;
 	}
 	@Override
 	public double getMinLambda() {

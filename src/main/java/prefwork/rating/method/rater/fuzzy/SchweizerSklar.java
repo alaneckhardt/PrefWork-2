@@ -31,7 +31,7 @@ public class SchweizerSklar implements Family{
 	}
 	@Override
 	public double getMaxLambda() {
-		return 1000;
+		return BaseFunctions.MAX_VALUE;
 	}
 	@Override
 	public double getMinLambda() {
