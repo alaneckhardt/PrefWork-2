@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +21,7 @@ public class TopKStatistics extends TestInterpreter {
 	TestResults testResults;
 	int run;
 	int count, positionsSum;
+	double ndcg;
 	int topk;
 	@Override
 	synchronized public void writeTestResults(TestResults testResults) {
@@ -34,7 +36,7 @@ public class TopKStatistics extends TestInterpreter {
 						true));
 				out
 						.write(headerPrefix
-								+ "userId;run;topkCount;topkRatio;buildTime;testTime;countTrain;countTest;countUnableToPredict;\n");
+								+ "userId;run;topkCount;topkRatio;ndcg;buildTime;testTime;countTrain;countTest;countUnableToPredict;\n");
 			} else
 				out = new BufferedWriter(new FileWriter(filePrefix + ".csv",
 						true));
@@ -52,6 +54,7 @@ public class TopKStatistics extends TestInterpreter {
 							.write((rowPrefix + userId + ";" + run + ";" 
 									+ count + ";"
 									+ positionsSum + ";"
+									+ ndcg + ";"
 									+ stat.buildTime + ";" + stat.testTime
 									+ ";" + stat.countTrain + ";"
 									+ stat.countTest + ";"
@@ -73,10 +76,10 @@ public class TopKStatistics extends TestInterpreter {
 	 * @param stat
 	 * @return
 	 */
-	private Double computeTopK(Stats stat) {
+	private void computeTopK(Stats stat) {
 		Set<Entry<Integer, Double[]>> set = stat.getSet();
 		if (set == null || set.size() <= 0)
-			return 0.0D;
+			return;
 
 		CompareRatings cd = new CompareRatings();
 		Rating[] array2;
@@ -84,11 +87,22 @@ public class TopKStatistics extends TestInterpreter {
 		array2 = DataMiningStatistics.getArray(set, 0, stat.unableToPredict);
 		
 		Rating[] array1;
-		//Exclude unableToPredict
 		/** Array of methods ratings.*/
 		array1= DataMiningStatistics.getArray(set, 1, null);
-
 		java.util.Arrays.sort(array1, cd);
+		
+		/*Compute nCDG*/
+		Double[] arr = new Double[array1.length];
+		for (int i = 0; i < array1.length; i++) {
+			if(array1[i]==null)
+				continue;
+			int j = DataMiningStatistics.findObject(array1[i].objectId, array2);
+			arr[i] = array2[j].rating;
+		}
+		
+		ndcg = ndcg(arr);
+		
+		
 		array1 = java.util.Arrays.copyOf(array1, Math.min(topk, array1.length));
 		//array1 = setWeights(array1);
 		java.util.Arrays.sort(array2, cd);
@@ -108,7 +122,7 @@ public class TopKStatistics extends TestInterpreter {
 		}
 		if(positionsSum == 0)
 			positionsSum = array1.length;
-		return 1.0*count;
+
 	}
 
 	@Override
@@ -118,5 +132,114 @@ public class TopKStatistics extends TestInterpreter {
 		topk = Utils.getIntFromConfIfNotNull(testConf, "topk", topk);
 		
 	}
+	
+
+    // the max grade
+    private static double G_MAX = 5;
+
+    public static double lex(Double[] orgRanking) {
+            Double[] ranking = new Double[orgRanking.length];
+            for(int i = 0 ; i < orgRanking.length ; i++){
+                    ranking[i] = orgRanking[i];
+            }
+            double feedbackScore = 0;
+            for (int i = 9; i >= 0; i--) {
+                    int idx = 9 - i;
+                    double currScore = Math.pow(2, i) * ranking[idx];
+                    feedbackScore += currScore;
+                    if (idx == ranking.length - 1) {
+                            return feedbackScore;
+                    }
+            }
+            return feedbackScore;
+    }
+   
+    /**
+     * Calculates the DCG (Discounted cumulative gain) score for the specified ranking evaluation.
+     *
+     * @param ranking
+     *            the ranking evaluation
+     * @return the DCG score for the ranking
+     */
+    public static double dcg(Double[] ranking) {
+            double score = ranking[0];
+            for (int i = 1; i < ranking.length; i++) {
+                    score += calcDcgForPos(ranking[i], i + 1);
+            }
+            return ranking[0] + score;
+    }
+
+    /**
+     * Calculates the DCG (Discounted cumulative gain) score for the specified evaluation score at the specified rank
+     * position.
+     *
+     * @param score
+     *            the evaluation score
+     * @param rank
+     *            the rank position
+     * @return the DCG score
+     */
+    private static double calcDcgForPos(double score, int rank) {
+            double log2Pos = Math.log(rank) / Math.log(2);
+            return score / log2Pos;
+    }
+
+    /**
+     * Calculates the NDCG (Normalized discounted cumulative gain) score for the specified ranking evaluation.
+     *
+     * @param ranking
+     *            the ranking evaluation
+     * @return the NDCG score for the ranking
+     */
+    public static double ndcg(Double[] orgRanking) {
+            Double[] ranking = new Double[orgRanking.length];
+            for(int i = 0 ; i < orgRanking.length ; i++){
+                    ranking[i] = orgRanking[i];
+            }
+            return dcg(ranking) / dcg(reverseSortDesc(ranking));
+    }
+
+    /**
+     * Reverse sorts the specified array in descending order based on the evaluation value.
+     *
+     * @param ranking
+     *            the ranking evaluation
+     * @return the sorted array
+     */
+    public static Double[] reverseSortDesc(Double[] ranking) {
+            Double[] reverseSorted = new Double[ranking.length];
+            Arrays.sort(ranking);
+            int arrLen = ranking.length;
+            for (int i = arrLen - 1; i >= 0; i--) {
+                    int pos = arrLen - 1 - i;
+                    reverseSorted[pos] = ranking[i];
+            }
+            return reverseSorted;
+    }
+   
+    /**
+     * Calculates the ERR (Expected Reciprocal Rank).
+     *
+     * @param ranking
+     *            the ranking evaluation
+     * @return the ERR score
+     */
+    public static double err(Double[] orgRanking) {
+            Double[] ranking = new Double[orgRanking.length];
+            for(int i = 0 ; i < orgRanking.length ; i++){
+                    ranking[i] = orgRanking[i];
+            }
+            double p = 1;
+            double errScore = 0;
+            int n = ranking.length;
+            for (int r = 1; r <= n; r++) {
+                    double g = ranking[r - 1];
+                    double rg = (Math.pow(2, g) - 1) / Math.pow(2, G_MAX);
+                    errScore += p * (rg / r);
+                    p = p * (1 - rg);
+            }
+            return errScore;
+    }
+
 }
 
