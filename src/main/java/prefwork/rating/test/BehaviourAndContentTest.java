@@ -129,7 +129,8 @@ public class BehaviourAndContentTest implements Test {
 		configTestDatasource(dataSource, runInner, trainSet, size);
 		Integer[] classesTest = getClassesCounts(dataSource);
 		while (!checkClasses(classesTrain,false) || !checkClasses(classesTest,false)) {
-			dataSource.shuffleInstances();		configTrainDatasource(dataSource, runInner, trainSet, size);
+			dataSource.shuffleInstances();
+			configTrainDatasource(dataSource, runInner, trainSet, size);
 			classesTrain = getClassesCounts(dataSource);
 			configTestDatasource(dataSource, runInner, trainSet, size);
 			classesTest = getClassesCounts(dataSource);
@@ -172,7 +173,9 @@ public class BehaviourAndContentTest implements Test {
 				size = dataSource.size();
 				checkDataSource(dataSource.getBehaviour(),runInner, trainSet);
 				checkDataSource(dataSource.getContent(),runInner, trainSet);
-				
+
+				configTrainDatasource(dataSource.getBehaviour(), runInner, trainSet, size);
+				configTrainDatasource(dataSource.getContent(), runInner, trainSet, size);
 				Long startBuildUser, endBuildUser;
 				int trainCount;
 				if (ind.getBehaviour() != null) {
@@ -199,6 +202,7 @@ public class BehaviourAndContentTest implements Test {
 					dataSource.getContent().setFixedUserId(userId);
 				}
 
+				configTestDatasource(dataSource.getContent(), runInner, trainSet, size);
 				// Testing content
 				size = dataSource.getContent().size();
 				log.debug("userId " + userId + ", tr " + trainSet);
