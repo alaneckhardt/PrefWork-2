@@ -1,12 +1,9 @@
 package prefwork.rating.method;
 
-import java.util.List;
-
 import org.apache.commons.configuration.XMLConfiguration;
 
 import prefwork.core.DataSource;
 import prefwork.core.UserEval;
-import prefwork.core.Utils;
 import prefwork.rating.Rating;
 import prefwork.rating.datasource.ContentDataSource;
 import prefwork.rating.method.rater.Rater;
@@ -85,12 +82,10 @@ public class Statistical extends ContentBased {
 		this.attributes = trainingDataset.getInstances();
 		trainingDataset.setFixedUserId(userId);
 		trainingDataset.restart();
-		int target = trainingDataset.getClassAttributeIndex();
 		if (!trainingDataset.hasNext())
 			return 0;
 		//loadAttributes(trainingDataset);
 
-		Rating rec;
 		int count = 0;
 		/*while ((rec = (Rating)trainingDataset.next()) != null) {
 			// record[0] - uzivatelID

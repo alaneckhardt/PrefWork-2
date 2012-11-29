@@ -27,13 +27,6 @@ public class Random implements Method{
         trainingDataset.restart();
         max = Double.MIN_VALUE;
         min = Double.MAX_VALUE;
-       /* double []classes = trainingDataset.getClasses();
-        for (int i = 0; i < classes.length; i++) {
-        	if(max<classes[i])
-        		max = classes[i];
-        	if(min>classes[i])
-        		min = classes[i];
-		}*/
         Rating rec;
         while((rec = (Rating)trainingDataset.next())!= null) {
         	double r = rec.getRating();
