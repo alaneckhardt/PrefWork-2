@@ -32,7 +32,7 @@ public class FuzzyRater implements Rater {
 	Lambdas l = new Lambdas();
 	String familyName;
 	FindLambda find;
-	double precision = 1.0;
+	double precision =0.5;
 	
 	public FuzzyRater() {
 	}
@@ -45,7 +45,7 @@ public class FuzzyRater implements Rater {
 	}
 
 	public String toString(){
-		return "Fuzzy"+f.getClass().getSimpleName()+precision;
+		return "FuzzyNew"+f.toString()+precision;
 	}
 
 	@Override

@@ -24,11 +24,11 @@ public class MayorTorrens implements Family{
 		return getMinLambda();
 	}			
 	public String toString() {
-		return "MayorTorrens";
+		return "MayorTorrens"+getMaxLambda();
 	}
 	@Override
 	public double getMaxLambda() {
-		return 1.0;
+		return 5.0;
 	}
 	@Override
 	public double getMinLambda() {

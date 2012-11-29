@@ -27,11 +27,11 @@ public class Metric implements Family{
 		return 0.0;
 	}
 	public String toString() {
-		return "Metric";
+		return "Metric"+getMaxLambda();
 	}
 	@Override
 	public double getMaxLambda() {
-		return 1;
+		return 100;
 	}
 	@Override
 	public double getMinLambda() {

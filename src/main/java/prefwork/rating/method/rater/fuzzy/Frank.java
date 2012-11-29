@@ -29,11 +29,11 @@ public class Frank implements Family{
 		return 0.0;
 	}		
 	public String toString() {
-		return "Frank";
+		return "Frank1e10";
 	}
 	@Override
 	public double getMaxLambda() {
-		return BaseFunctions.MAX_VALUE;
+		return 1e10;
 	}
 	@Override
 	public double getMinLambda() {

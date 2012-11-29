@@ -27,11 +27,11 @@ public class SchweizerSklar implements Family{
 		return 0.1;
 	}		
 	public String toString() {
-		return "SchweizerSklar";
+		return "SchweizerSklar"+getMaxLambda();
 	}
 	@Override
 	public double getMaxLambda() {
-		return BaseFunctions.MAX_VALUE;
+		return 1e50;
 	}
 	@Override
 	public double getMinLambda() {

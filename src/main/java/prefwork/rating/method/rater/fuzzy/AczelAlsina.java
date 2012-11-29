@@ -21,11 +21,11 @@ public class AczelAlsina implements Family {
 		return getMaxLambda();
 	}			
 	public String toString() {
-		return "AczelAlsina";
+		return "AczelAlsina"+getMaxLambda();
 	}
 	@Override
 	public double getMaxLambda() {
-		return BaseFunctions.MAX_VALUE;
+		return 1e100;
 	}
 	@Override
 	public double getMinLambda() {

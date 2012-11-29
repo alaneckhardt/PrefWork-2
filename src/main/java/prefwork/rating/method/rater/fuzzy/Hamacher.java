@@ -23,11 +23,11 @@ public class Hamacher implements  Family{
 		return getMinLambda();
 	}			
 	public String toString() {
-		return "Hamacher";
+		return "Hamacher50";
 	}
 	@Override
 	public double getMaxLambda() {
-		return BaseFunctions.MAX_VALUE;
+		return 50;
 	}
 	@Override
 	public double getMinLambda() {

@@ -23,12 +23,11 @@ public class Yager implements Family {
 		return getMaxLambda();
 	}	
 	public String toString() {
-		return "Yager";
+		return "Yager"+getMaxLambda();
 	}
 	@Override
 	public double getMaxLambda() {
-		return BaseFunctions.MAX_VALUE;
-	}
+		return 1e100;	}
 	@Override
 	public double getMinLambda() {
 		return 0.0;

@@ -23,11 +23,11 @@ public class Dombi implements Family {
 		return getMaxLambda();
 	}	
 	public String toString() {
-		return "Dombi";
+		return "Dombi"+getMaxLambda();
 	}
 	@Override
 	public double getMaxLambda() {
-		return BaseFunctions.MAX_VALUE;
+		return 1e3;
 	}
 	@Override
 	public double getMinLambda() {

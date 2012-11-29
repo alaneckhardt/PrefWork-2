@@ -21,11 +21,11 @@ public class SugenoWeber implements Family {
 		return getMaxLambda();
 	}			
 	public String toString() {
-		return "Sugeno-Weber";
+		return "Sugeno-Weber"+getMaxLambda();
 	}
 	@Override
 	public double getMaxLambda() {
-		return BaseFunctions.MAX_VALUE;
+		return 1e50;
 	}
 	@Override
 	public double getMinLambda() {
