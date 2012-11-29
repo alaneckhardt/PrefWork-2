@@ -37,8 +37,10 @@
 	 <SlanFiltered1User><file>F:\data\datasets\slantour\contentFiltered1User</file></SlanFiltered1User>
 	 <SlanFiltered1UserBeh><file>F:\data\datasets\slantour\behaviourFiltered1User</file></SlanFiltered1UserBeh>
 	 
-	 <SlanFilteredUsers><file>F:\data\datasets\slantour\contentFilteredUsers</file></SlanFilteredUsers>
-	 <SlanFilteredUsersBeh><file>F:\data\datasets\slantour\behaviourFilteredUsers</file></SlanFilteredUsersBeh>
+	 <SlanFilteredUsers>
+			  	<minRatings>1</minRatings><file>F:\data\datasets\slantour\contentFilteredUsers</file></SlanFilteredUsers>
+	 <SlanFilteredUsersBeh>
+			  	<minRatings>1</minRatings><file>F:\data\datasets\slantour\behaviourFilteredUsers</file></SlanFilteredUsersBeh>
 	 </datasources>
 </THMultiUserSource>
 <THSource>
