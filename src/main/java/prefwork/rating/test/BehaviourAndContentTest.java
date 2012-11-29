@@ -30,6 +30,11 @@ public class BehaviourAndContentTest implements Test {
 	protected int numberOfRuns = 0;
 	private static Logger log = Logger.getLogger(BehaviourAndContentTest.class);
 	protected int size = 0;
+	/**How many ratings == 5 should be in training set.*/
+	protected int  boughtInTrain = 0;
+	/**How many ratings == 5 should be in testing set.*/
+	protected int  boughtInTest = 0;
+	
 	@SuppressWarnings("unchecked")
 	public void configTest(XMLConfiguration config, String section) {
 		Configuration testConf = config.configurationAt(section);
@@ -37,6 +42,8 @@ public class BehaviourAndContentTest implements Test {
 				.getList("trainSets"));
 		numberOfRuns = Utils.getIntFromConfIfNotNull(testConf, "numberOfRuns", numberOfRuns);
 		usersToTest = Utils.getIntFromConfIfNotNull(testConf, "usersToTest", usersToTest);
+		boughtInTest = Utils.getIntFromConfIfNotNull(testConf, "boughtInTest", boughtInTest);
+		boughtInTrain = Utils.getIntFromConfIfNotNull(testConf, "boughtInTrain", boughtInTrain);
 		try {
 			resultsInterpreter = Utils
 					.getTestInterpreter(config, section);
@@ -125,10 +132,10 @@ public class BehaviourAndContentTest implements Test {
 	 */
 	protected boolean checkDataSource(DataSource dataSource, int runInner, int trainSet){
 		configTrainDatasource(dataSource, runInner, trainSet, size);
-		Integer[] classesTrain = getClassesCounts(dataSource);
+		Map<Double,Integer> classesTrain = getClassesCounts(dataSource);
 		configTestDatasource(dataSource, runInner, trainSet, size);
-		Integer[] classesTest = getClassesCounts(dataSource);
-		while (!checkClasses(classesTrain,false) || !checkClasses(classesTest,false)) {
+		Map<Double,Integer> classesTest = getClassesCounts(dataSource);
+		while (!checkClasses(classesTrain,boughtInTrain) || !checkClasses(classesTest,boughtInTest)) {
 			dataSource.shuffleInstances();
 			configTrainDatasource(dataSource, runInner, trainSet, size);
 			classesTrain = getClassesCounts(dataSource);
@@ -153,10 +160,10 @@ public class BehaviourAndContentTest implements Test {
 		dataSource.getContent().setLimit(-1, -1, false);
 		dataSource.getBehaviour().restart();
 		dataSource.getContent().restart();
-		if (!checkClasses(getClassesCounts(dataSource.getBehaviour()),true)) {
+		if (!checkClasses(getClassesCounts(dataSource.getBehaviour()),boughtInTest + boughtInTrain)) {
 			return;
 		}
-		if (!checkClasses(getClassesCounts(dataSource.getContent()),true)) {
+		if (!checkClasses(getClassesCounts(dataSource.getContent()),boughtInTest + boughtInTrain)) {
 			return;
 		}
 		while (run < numberOfRuns) {
@@ -164,12 +171,17 @@ public class BehaviourAndContentTest implements Test {
 			dataSource.getContent().setFixedUserId(userId);
 			dataSource.getBehaviour().shuffleInstances();
 			dataSource.getContent().shuffleInstances();
+			size = dataSource.size();
 			int runInner = 0;
 			// Train set bigger than size of the dataset.
 			if ((runInner + 1) * trainSet > size - 1 && size > 0)
 				break;
 			while (((runInner + 1) * trainSet <= size - 1 || size == 0) && run < numberOfRuns) {
 
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+				}
 				size = dataSource.size();
 				checkDataSource(dataSource.getBehaviour(),runInner, trainSet);
 				checkDataSource(dataSource.getContent(),runInner, trainSet);
@@ -221,22 +233,30 @@ public class BehaviourAndContentTest implements Test {
 		}
 	}
 	
-	protected boolean checkClasses(Integer[] counts, boolean atLeastTwo){
-		if(counts.length < 2)
-			return false;
-		if(atLeastTwo && counts.length == 2){
-			for(Integer i : counts){
-				if(i<2)
-					return false;
-			}
+	/**
+	 * 
+	 * @param counts
+	 * @param atLeast how many bought items, i.e. those with rating == 5
+	 * @return
+	 */
+	protected boolean checkClasses(Map<Double,Integer> counts, int atLeast){
+		/*if(counts.size() < 2)
+			return false;*/
+		if(atLeast <= 0)
+			return true;
+		
+		for(Double d : counts.keySet()){
+			if(d == 5.0 && counts.get(d) >= atLeast)
+				return true;
 		}
-		return true;
+		
+		return false;
 	}
 	/**
 	 * Checks if there is at least two different classes in the train and test data.
 	 * @return
 	 */
-	protected Integer[] getClassesCounts(DataSource ds){
+	protected Map<Double,Integer> getClassesCounts(DataSource ds){
 		ds.restart();
 		Rating  rec = (Rating)ds.next();
 		Map<Double, Integer> l = new HashMap<Double,Integer>();
@@ -247,9 +267,7 @@ public class BehaviourAndContentTest implements Test {
 			l.put(d, (l.get(d))+1);
 			rec = (Rating)ds.next();
 		}
-		Integer[] arr = new Integer[l.size()];
-		arr = l.values().toArray(arr);
-		return arr;
+		return l;
 	}
 	public void test(Method ind, DataSource dataSource) {
 		BehaviourAndContentData trainDataSource = (BehaviourAndContentData)dataSource;
