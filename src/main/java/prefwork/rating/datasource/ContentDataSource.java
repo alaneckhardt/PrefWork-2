@@ -64,6 +64,9 @@ public abstract class ContentDataSource implements DataSource{
 	public void setUserRecords(Rating[][] userRecords) {
 		this.userRecords = userRecords;
 	}
+	public Rating[][]  getUserRecords() {
+		return this.userRecords;
+	}
 	
     public int getClassAttributeIndex(){
     	return classIndex;
