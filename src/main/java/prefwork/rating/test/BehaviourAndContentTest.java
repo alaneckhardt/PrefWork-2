@@ -94,6 +94,7 @@ public class BehaviourAndContentTest implements Test {
 		userIds.add(userId);
 		Integer otherUserId = testDataSource.userId();
 		testDataSource.setLimit(-1, -1, false);
+		Double tempRating;
 		while (otherUserId != null) {
 			if(userIds.contains(otherUserId)){
 				otherUserId = testDataSource.userId();
@@ -108,6 +109,9 @@ public class BehaviourAndContentTest implements Test {
 					rec = (Rating)testDataSource.next();
 					continue;
 				}
+				tempRating = rec.getRating();
+				rec.setRating(0);
+				rec.setUserId(userId);
 				startTestUser = System.currentTimeMillis();
 				Double compRes = (Double)ind.classifyRecord(rec);
 				endTestUser+=System.currentTimeMillis()-startTestUser;
@@ -117,6 +121,8 @@ public class BehaviourAndContentTest implements Test {
 				else
 					results.addUnableToPredict(userId, run, rec.getObjectId(),0.0);
 				seen.add(rec.getObjectId());
+				rec.setRating(tempRating);
+				rec.setUserId(otherUserId);
 				rec = (Rating)testDataSource.next();
 			}
 			otherUserId = testDataSource.userId();
@@ -307,12 +313,12 @@ public class BehaviourAndContentTest implements Test {
 						results.reset();
 						PrefWork.semWrite.release();
 					}
-					System.gc();
+					//System.gc();
 				
 			}
 		}
 		log.info("Ended method " + m.toString());
-		System.gc();		
+		//System.gc();		
 	}
 
 	@Override
