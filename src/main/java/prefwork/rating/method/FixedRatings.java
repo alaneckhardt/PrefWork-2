@@ -71,6 +71,10 @@ public class FixedRatings extends ContentBased {
 	 */
 	@Override
 	public Object classifyRecord(UserEval record) {
+		if(!ratings.containsKey(((Rating) record).getUserId()))
+			return null;
+		if(!ratings.get(((Rating) record).getUserId()).containsKey(((Rating) record).getObjectId()))
+			return null;
 		return ratings.get(((Rating) record).getUserId()).get(((Rating) record).getObjectId());
 	}
 
