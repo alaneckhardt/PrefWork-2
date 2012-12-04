@@ -25,7 +25,7 @@ public class SugenoWeber implements Family {
 	}
 	@Override
 	public double getMaxLambda() {
-		return 1e50;
+		return 5;
 	}
 	@Override
 	public double getMinLambda() {

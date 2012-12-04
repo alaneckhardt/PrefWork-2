@@ -3,12 +3,12 @@ package prefwork.rating.method.rater.fuzzy;
 public class SchweizerSklar implements Family{
 
 	public  double implicator(double x, double y, double lambda){
-		if (lambda == 0.0)
+		/*if (lambda == 0.0)
 			return BaseFunctions.IP(x,y);
 		if (lambda == BaseFunctions.MAX_VALUE)
 			return BaseFunctions.ID(x,y);
 		if (lambda == Double.MIN_VALUE)
-			return BaseFunctions.IM(x,y);
+			return BaseFunctions.IM(x,y);*/
 		
 		return 1-(Math.pow(Math.max(0, Math.pow(1-x,lambda)+Math.pow(1-y,lambda)-1), 1/lambda));
 	
@@ -24,14 +24,14 @@ public class SchweizerSklar implements Family{
 		return Math.pow(Math.max(0, ((Math.pow(x,lambda)+Math.pow(y,lambda)-1))), 1/lambda);
 	}	
 	public double getMostSpecific() {
-		return 0.1;
+		return getMinLambda();
 	}		
 	public String toString() {
 		return "SchweizerSklar"+getMaxLambda();
 	}
 	@Override
 	public double getMaxLambda() {
-		return 1e50;
+		return 0.2;
 	}
 	@Override
 	public double getMinLambda() {

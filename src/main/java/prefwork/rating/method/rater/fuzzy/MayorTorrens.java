@@ -28,7 +28,7 @@ public class MayorTorrens implements Family{
 	}
 	@Override
 	public double getMaxLambda() {
-		return 5.0;
+		return 2;
 	}
 	@Override
 	public double getMinLambda() {
