@@ -184,10 +184,10 @@ public class BehaviourAndContentTest implements Test {
 				break;
 			while (((runInner + 1) * trainSet <= size - 1 || size == 0) && run < numberOfRuns) {
 
-				try {
+				/*try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
-				}
+				}*/
 				size = dataSource.size();
 				checkDataSource(dataSource.getBehaviour(),runInner, trainSet);
 				checkDataSource(dataSource.getContent(),runInner, trainSet);
