@@ -45,7 +45,7 @@ public class FuzzyRater implements Rater {
 	}
 
 	public String toString(){
-		return "FuzzyNew"+f.toString()+precision;
+		return "Fuzzy"+f.toString()+precision;
 	}
 
 	@Override
