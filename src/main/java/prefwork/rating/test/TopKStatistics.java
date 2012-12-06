@@ -100,7 +100,7 @@ public class TopKStatistics extends TestInterpreter {
 			arr[i] = array2[j].rating;
 		}
 		
-		ndcg = ndcg(arr);
+		ndcg = ndcg(arr, topk);
 		
 		
 		array1 = java.util.Arrays.copyOf(array1, Math.min(topk, array1.length));
@@ -191,9 +191,9 @@ public class TopKStatistics extends TestInterpreter {
      *            the ranking evaluation
      * @return the NDCG score for the ranking
      */
-    public static double ndcg(Double[] orgRanking) {
-            Double[] ranking = new Double[orgRanking.length];
-            for(int i = 0 ; i < orgRanking.length ; i++){
+    public static double ndcg(Double[] orgRanking, int topk) {
+            Double[] ranking = new Double[Math.min(topk,orgRanking.length)];
+            for(int i = 0 ; i < orgRanking.length && i < topk ; i++){
                     ranking[i] = orgRanking[i];
             }
             return dcg(ranking) / dcg(reverseSortDesc(ranking));
