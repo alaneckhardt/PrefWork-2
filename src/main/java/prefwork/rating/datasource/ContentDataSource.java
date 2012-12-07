@@ -81,16 +81,28 @@ public abstract class ContentDataSource implements DataSource{
 
 	@Override
 	public void shuffleInstances() {
-		Random random = new Random(seed);
-		seed = random.nextLong();
+		/*Random random = new Random(seed);
+		seed = random.nextLong();*/
 		for (int i = 0; i < userRecords.length; i++) {
-		    for (int j = userRecords[i].length -1; j > 0; j--){
+			shuffleInstances(i);/*
+			for (int j = userRecords[i].length -1; j > 0; j--){
 		        Rating r = userRecords[i][j];
 		        int k = random.nextInt(j+1);
 		        userRecords[i][j] = userRecords[i][k];
 		        userRecords[i][k] = r;
-		    }
+		    }*/
 		}
+	}
+
+	public void shuffleInstances(int userId) {
+		Random random = new Random(seed);
+		seed = random.nextLong();
+		    for (int j = userRecords[userId].length -1; j > 0; j--){
+		        Rating r = userRecords[userId][j];
+		        int k = random.nextInt(j+1);
+		        userRecords[userId][j] = userRecords[userId][k];
+		        userRecords[userId][k] = r;
+		    }
 	}
 
 	@Override

@@ -122,6 +122,13 @@ public class BehaviourAndContentData implements DataSource{
 		else
 			content.shuffleInstances();
 	}
+	@Override
+	public void shuffleInstances(int userId) {
+		if(useBehaviour)
+			behaviour.shuffleInstances(userId);
+		else
+			content.shuffleInstances(userId);
+	}
 
 	@Override
 	public int size() {

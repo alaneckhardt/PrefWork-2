@@ -136,13 +136,13 @@ public class BehaviourAndContentTest implements Test {
 	 * @param dataSource
 	 * @return
 	 */
-	protected boolean checkDataSource(DataSource dataSource, int runInner, int trainSet){
+	protected boolean checkDataSource(DataSource dataSource, int runInner, int trainSet, int userId){
 		configTrainDatasource(dataSource, runInner, trainSet, size);
 		Map<Double,Integer> classesTrain = getClassesCounts(dataSource);
 		configTestDatasource(dataSource, runInner, trainSet, size);
 		Map<Double,Integer> classesTest = getClassesCounts(dataSource);
 		while (!checkClasses(classesTrain,boughtInTrain) || !checkClasses(classesTest,boughtInTest)) {
-			dataSource.shuffleInstances();
+			dataSource.shuffleInstances(userId);
 			configTrainDatasource(dataSource, runInner, trainSet, size);
 			classesTrain = getClassesCounts(dataSource);
 			configTestDatasource(dataSource, runInner, trainSet, size);
@@ -172,11 +172,16 @@ public class BehaviourAndContentTest implements Test {
 		if (!checkClasses(getClassesCounts(dataSource.getContent()),boughtInTest + boughtInTrain)) {
 			return;
 		}
+		//We need at least one object in the test set.
+		if(dataSource.getContent().size() <= trainSet)
+			return;
+		if(dataSource.getBehaviour().size() <= trainSet)
+			return;
 		while (run < numberOfRuns) {
 			dataSource.getBehaviour().setFixedUserId(userId);
 			dataSource.getContent().setFixedUserId(userId);
-			dataSource.getBehaviour().shuffleInstances();
-			dataSource.getContent().shuffleInstances();
+			dataSource.getBehaviour().shuffleInstances(userId);
+			dataSource.getContent().shuffleInstances(userId);
 			size = dataSource.size();
 			int runInner = 0;
 			// Train set bigger than size of the dataset.
@@ -189,8 +194,8 @@ public class BehaviourAndContentTest implements Test {
 				} catch (InterruptedException e) {
 				}*/
 				size = dataSource.size();
-				checkDataSource(dataSource.getBehaviour(),runInner, trainSet);
-				checkDataSource(dataSource.getContent(),runInner, trainSet);
+				checkDataSource(dataSource.getBehaviour(),runInner, trainSet, userId);
+				checkDataSource(dataSource.getContent(),runInner, trainSet, userId);
 
 				configTrainDatasource(dataSource.getBehaviour(), runInner, trainSet, size);
 				configTrainDatasource(dataSource.getContent(), runInner, trainSet, size);

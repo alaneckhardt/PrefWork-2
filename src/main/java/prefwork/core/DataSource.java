@@ -6,7 +6,15 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 
 public interface DataSource extends java.util.Iterator<UserEval>{
+	/**
+	 * Shuffles instances for all users. Used in bootstrap methods.
+	 */
 	public void shuffleInstances();
+	/**
+	 * Shuffles the instances for one user
+	 * @param userId
+	 */
+	public void shuffleInstances(int userId);
 	public int size();
     /**
      * Returns only object inside (or outside) the given interval. 
