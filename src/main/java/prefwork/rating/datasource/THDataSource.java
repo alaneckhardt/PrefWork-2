@@ -60,14 +60,16 @@ public class THDataSource extends ContentDataSource{
 			}
 			if(instances.attribute(index).isRelationValued()){
 				String val = rec[j];
-				Instances value = r.getRecord().relationalValue(index);
+				Instances value = instances.attribute(index).relation();
 				val = val.substring(1,val.length()-1);
 				String [] values = val.split(",");
 				for (int k = 0; k < values.length; k++) {
 					Instance inst = new weka.core.SparseInstance(1);
-					inst.setValue(0, values[k]);
+					inst.setDataset(value);
+					inst.setValue(0, value.attribute(0).addStringValue(values[k]));
 					value.add(inst);
 				}
+				vals[index] = instances.attribute(index).addRelation(value);
 										
 			}
 			else if("?".equals(rec[j]) ){
