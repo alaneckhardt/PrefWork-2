@@ -53,6 +53,7 @@ public class THMultiUserDataSource extends THDataSource{
 			//Go through users and filter out those with small amount of ratings.
 			Integer[] ids = new Integer[userRecords.keySet().size()];
 			ids = userRecords.keySet().toArray(ids);
+			Arrays.sort(ids);
 			for (Integer userId : ids) {
 				if(userRecords.get(userId).size() < minRatings)
 					userRecords.remove(userId);
@@ -61,7 +62,7 @@ public class THMultiUserDataSource extends THDataSource{
 			this.userRecords = new Rating[userRecords.size()][];
 			int j = 0;
 			i = 0;
-			for (Integer userId : userRecords.keySet()) {
+			for (Integer userId : ids) {
 				//int newUserId = userMap.get(userId);
 				int newUserId = i;
 				this.userRecords[newUserId]=new Rating[userRecords.get(userId).size()];
