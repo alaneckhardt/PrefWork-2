@@ -60,16 +60,43 @@ public class THDataSource extends ContentDataSource{
 			}
 			if(instances.attribute(index).isRelationValued()){
 				String val = rec[j];
-				Instances value = instances.attribute(index).relation();
+				Instances header = instances.attribute(index).relation();
+				Instances data = new Instances(header);
 				val = val.substring(1,val.length()-1);
+				val = val.trim();
 				String [] values = val.split(",");
 				for (int k = 0; k < values.length; k++) {
 					Instance inst = new weka.core.SparseInstance(1);
-					inst.setDataset(value);
-					inst.setValue(0, value.attribute(0).addStringValue(values[k]));
-					value.add(inst);
+					inst.setDataset(data);
+					inst.setValue(0, data.attribute(0).addStringValue(values[k]));
+					data.add(inst);
 				}
-				vals[index] = instances.attribute(index).addRelation(value);
+				//header.add(data);
+				//First check if the instance isn't there already.
+				boolean foundWhole = false;
+				for (int k = 0; k < instances.attribute(index).numValues(); k++) {
+					foundWhole = true;
+					Instances instance = instances.attribute(index).relation(k);
+					for (int l = 0; l < instance.numInstances(); l++) {
+						boolean found = false;
+						for (int l2 = 0; l2 < data.numInstances(); l2++) {
+							if(instance.instance(l).value(0)==(data.instance(l2).value(0))){
+								found = true;
+								break;
+							}						
+						}
+						if(!found){
+							foundWhole = false;
+							break;				
+						}
+					}
+					if(foundWhole){
+						vals[index] = k;
+						break;				
+					}
+				}
+				if(!foundWhole)
+					vals[index] = instances.attribute(index).addRelation(data);	
 										
 			}
 			else if("?".equals(rec[j]) ){
@@ -189,7 +216,7 @@ public class THDataSource extends ContentDataSource{
 					attr = new Attribute(attrProp[1],  (ArrayList<String>)null, attrCount);
 				}else if ("L".equals(attrProp[0])) {
 					ArrayList<Attribute> list = new ArrayList<Attribute>();
-					list.add(new Attribute("list",new ArrayList<String>()));
+					list.add(new Attribute("list",  (ArrayList<String>)null, 0));
 					attr = new Attribute(attrProp[1],  new Instances("list"+attrCount, list,10), attrCount);
 				} else if ("R".equals(attrProp[0])) {
 					attr = new Attribute(attrProp[1], attrCount);
