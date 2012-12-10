@@ -4,7 +4,9 @@ public class Metric implements Family{
 
 	private double simToDist(double x){
 		return 1-x;
-		//return (1-x)/(x);
+		/*if(x == 0)
+			x=BaseFunctions.Epsilon;
+		return (1-x)/(x);*/
 	}
 	private double distToSim(double x){
 		return 1-x;
@@ -24,14 +26,14 @@ public class Metric implements Family{
 		return Math.min(1,(1-lambda)*distToSim((simToDist(x)+simToDist(y))));	
 	}
 	public double getMostSpecific() {
-		return 0.0;
+		return getMinLambda();
 	}
 	public String toString() {
 		return "Metric"+getMaxLambda();
 	}
 	@Override
 	public double getMaxLambda() {
-		return 100;
+		return 1;
 	}
 	@Override
 	public double getMinLambda() {
