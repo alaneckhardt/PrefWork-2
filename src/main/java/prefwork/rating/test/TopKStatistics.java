@@ -36,7 +36,7 @@ public class TopKStatistics extends TestInterpreter {
 						true));
 				out
 						.write(headerPrefix
-								+ "userId;run;topkCount;topkRatio;ndcg;buildTime;testTime;countTrain;countTest;countUnableToPredict;\n");
+								+ "userId;run;topkCount;topkRatio;ndcg;mae;buildTime;testTime;countTrain;countTest;countUnableToPredict;\n");
 			} else
 				out = new BufferedWriter(new FileWriter(filePrefix + ".csv",
 						true));
@@ -55,6 +55,7 @@ public class TopKStatistics extends TestInterpreter {
 									+ count + ";"
 									+ positionsSum + ";"
 									+ ndcg + ";"
+									+ computeMae(stat) + ";"
 									+ stat.buildTime + ";" + stat.testTime
 									+ ";" + stat.countTrain + ";"
 									+ stat.countTest + ";"
@@ -240,6 +241,25 @@ public class TopKStatistics extends TestInterpreter {
             }
             return errScore;
     }
+    private String computeMae(Stats stat) {
+		Set<Entry<Integer, Double[]>> set = stat.getSet();
+		if (set == null || set.size() <= 0)
+			return "0";
+		double mae = 0;
+		for (Entry<Integer, Double[]> entry : set) {
+			mae += Math.abs(entry.getValue()[1] - entry.getValue()[0]);
+		}
+		mae /= set.size();
+		double stdDevmae = 0;
+		for (Entry<Integer, Double[]> entry : set) {
+			stdDevmae += Math.abs(mae- Math.abs(entry.getValue()[1] - entry.getValue()[0]));
+		}
+
+		if(mae > 1000)
+			return  ""+ 1000 ;
+		
+		return  ""+ mae ;
+	}
 
 }
 
