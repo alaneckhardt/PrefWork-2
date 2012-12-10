@@ -250,6 +250,13 @@ public abstract class ContentBased implements Method {
 						+ ".nominalNormalizer");
 			}
 
+			if (methodConf.containsKey("listNormalizer")) {
+				listNormName = methodConf.getString("listNormalizer");
+				listNorm = (Normalizer) Utils
+						.getInstance(listNormName);
+				listNorm.configClassifier(config, section
+						+ ".listNormalizer");
+			}
 		
 
 			if (methodConf.containsKey("representant.class")) {
