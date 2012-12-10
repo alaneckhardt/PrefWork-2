@@ -168,7 +168,7 @@ public class Statistical extends ContentBased {
 		return "StatisticalOptimized" + rater.toString() + ","
 				+ representant.toString() + "," +/*textNorm.toString()+ */numericalNorm.toString()
 				+ "," + nominalNorm.toString()
-				+ "," /*+ listNorm.toString()*/;
+				+ "," + listNorm.toString();
 	}
 
 }
