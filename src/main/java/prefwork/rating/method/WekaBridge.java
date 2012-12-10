@@ -255,7 +255,7 @@ public class WekaBridge implements Method {
 		try {
 			cModel.buildClassifier(isTrainingSet);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			cModel = null;
 		}
 		return count;
