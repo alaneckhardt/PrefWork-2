@@ -22,7 +22,11 @@ public class Random implements Method{
 	 * Builds model for specified user.
 	 */
 	public int buildModel(DataSource trainingDataset, int user) {
-		r = new java.util.Random(seed);
+		if(r == null)
+			r = new java.util.Random(seed);
+		else
+			r = new java.util.Random(r.nextLong());
+		
     	trainingDataset.setFixedUserId(user);
         trainingDataset.restart();
         max = Double.MIN_VALUE;
