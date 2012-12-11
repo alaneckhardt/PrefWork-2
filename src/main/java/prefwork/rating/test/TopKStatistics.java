@@ -116,7 +116,7 @@ public class TopKStatistics extends TestInterpreter {
 			if(array1[i]==null)
 				break;
 			int j = DataMiningStatistics.findObject(array1[i].objectId, array2);
-			if(j != -1 && array2[j].rating == 5.0){
+			if(j != -1 && array2[j].rating == 1.0){
 				count++;
 				positionsSum+=i+1;
 			}
@@ -197,7 +197,11 @@ public class TopKStatistics extends TestInterpreter {
             for(int i = 0 ; i < orgRanking.length && i < topk ; i++){
                     ranking[i] = orgRanking[i];
             }
-            return dcg(ranking) / dcg(reverseSortDesc(ranking));
+            double dcg = dcg(ranking);
+            double idcg = dcg(reverseSortDesc(ranking));
+            if(idcg == 0.0)
+            	return 0;
+            return  dcg/idcg ;
     }
 
     /**

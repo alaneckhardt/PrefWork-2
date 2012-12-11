@@ -126,7 +126,7 @@ public class CreateFixedRatings implements Test {
 			return true;
 
 		for (Double d : counts.keySet()) {
-			if (d == 5.0 && counts.get(d) >= atLeast)
+			if (d == 1.0 && counts.get(d) >= atLeast)
 				return true;
 		}
 

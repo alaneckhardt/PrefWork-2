@@ -49,7 +49,7 @@ public class THMultiUserDataSource extends THDataSource{
 			}
 			in.close();
 			add = -min ;
-			coef = 4/(max-min);
+			coef = 1/(max-min);
 			//Go through users and filter out those with small amount of ratings.
 			Integer[] ids = new Integer[userRecords.keySet().size()];
 			ids = userRecords.keySet().toArray(ids);
@@ -79,11 +79,11 @@ public class THMultiUserDataSource extends THDataSource{
 					for (int j2 = 0; j2 < this.userRecords[j].length; j2++) {
 						Rating rec = this.userRecords[j][j2];	
 						double r= rec.getRating();
-						if(!classes.contains((r+add)*coef+1)){
-							classes.add((r+add)*coef+1);					
+						if(!classes.contains((r+add)*coef)){
+							classes.add((r+add)*coef);					
 						}
 						//Setting new rating
-						rec.setRating((r+add)*coef+1);
+						rec.setRating((r+add)*coef);
 					}
 				}
 			

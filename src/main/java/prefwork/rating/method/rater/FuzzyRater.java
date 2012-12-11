@@ -32,7 +32,7 @@ public class FuzzyRater implements Rater {
 	Lambdas l = new Lambdas();
 	String familyName;
 	FindLambda find;
-	double precision =0.5;
+	double precision =1.0;
 	
 	public FuzzyRater() {
 	}
@@ -59,8 +59,8 @@ public class FuzzyRater implements Rater {
 			Double[] normR = new Double[r.getRecord().numAttributes()];
 			for (int i = 0; i < normR.length; i++) {
 				if(i == r.getRecord().classIndex())
-					normR[i] = r.getRating()/5.0;
-				normR[i] = n[i].normalize(r)/5.0;		
+					normR[i] = r.getRating()/1.0;
+				normR[i] = n[i].normalize(r)/1.0;		
 				if(normR[i] == null)
 					normR[i] = 0.0;
 			}
@@ -88,7 +88,7 @@ public class FuzzyRater implements Rater {
 			if(ratings[i] == null)
 				ratings[i] = 0.0;
 			else
-				ratings[i] /= 5.0;
+				ratings[i] /= 1.0;
 				
 		}
 		double[] b = find.getBounds(ratings,f,l);

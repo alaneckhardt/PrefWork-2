@@ -136,12 +136,12 @@ public class BehaviourAndContentTest implements Test {
 	 * @param dataSource
 	 * @return
 	 */
-	protected boolean checkDataSource(DataSource dataSource, int runInner, int trainSet, int userId){
+	protected boolean checkDataSource(DataSource dataSource, int runInner, int trainSet, int userId,boolean distinctTrain){
 		configTrainDatasource(dataSource, runInner, trainSet, size);
 		Map<Double,Integer> classesTrain = getClassesCounts(dataSource);
 		configTestDatasource(dataSource, runInner, trainSet, size);
 		Map<Double,Integer> classesTest = getClassesCounts(dataSource);
-		while (!checkClasses(classesTrain,boughtInTrain) || !checkClasses(classesTest,boughtInTest)) {
+		while (!checkClasses(classesTrain,boughtInTrain, distinctTrain) || !checkClasses(classesTest,boughtInTest, false)) {
 			dataSource.shuffleInstances(userId);
 			configTrainDatasource(dataSource, runInner, trainSet, size);
 			classesTrain = getClassesCounts(dataSource);
@@ -166,10 +166,10 @@ public class BehaviourAndContentTest implements Test {
 		dataSource.getContent().setLimit(-1, -1, false);
 		dataSource.getBehaviour().restart();
 		dataSource.getContent().restart();
-		if (!checkClasses(getClassesCounts(dataSource.getBehaviour()),boughtInTest + boughtInTrain)) {
+		if (!checkClasses(getClassesCounts(dataSource.getBehaviour()),boughtInTest + boughtInTrain, false)) {
 			return;
 		}
-		if (!checkClasses(getClassesCounts(dataSource.getContent()),boughtInTest + boughtInTrain)) {
+		if (!checkClasses(getClassesCounts(dataSource.getContent()),boughtInTest + boughtInTrain, true)) {
 			return;
 		}
 		//We need at least one object in the test set.
@@ -194,8 +194,7 @@ public class BehaviourAndContentTest implements Test {
 				} catch (InterruptedException e) {
 				}*/
 				size = dataSource.size();
-				checkDataSource(dataSource.getBehaviour(),runInner, trainSet, userId);
-				checkDataSource(dataSource.getContent(),runInner, trainSet, userId);
+				checkDataSource(dataSource.getBehaviour(),runInner, trainSet, userId, false);
 
 				configTrainDatasource(dataSource.getBehaviour(), runInner, trainSet, size);
 				configTrainDatasource(dataSource.getContent(), runInner, trainSet, size);
@@ -213,8 +212,14 @@ public class BehaviourAndContentTest implements Test {
 					dataSource.usePredictedRatingsForContent(ind.getBehaviour());
 					dataSource.getContent().setFixedUserId(userId);
 				}
+				//Only one class in learned ratings, continue
+				/*if(!checkClasses(getClassesCounts(dataSource.getContent()), boughtInTrain, true)){
+					run++;
+					runInner++;
+					continue;
+				}*/
+				//checkDataSource(dataSource.getContent(),runInner, trainSet, userId, true);
 				startBuildUser = System.currentTimeMillis();
-
 				trainCount = ind.getContent().buildModel(dataSource.getContent(), userId);
 				results.setTrainCount(userId, run, trainCount);
 				endBuildUser = System.currentTimeMillis();
@@ -250,14 +255,14 @@ public class BehaviourAndContentTest implements Test {
 	 * @param atLeast how many bought items, i.e. those with rating == 5
 	 * @return
 	 */
-	protected boolean checkClasses(Map<Double,Integer> counts, int atLeast){
-		/*if(counts.size() < 2)
-			return false;*/
+	protected boolean checkClasses(Map<Double,Integer> counts, int atLeast, boolean distinct){
+		if(distinct && counts.size() < 2)
+			return false;
 		if(atLeast <= 0)
 			return true;
 		
 		for(Double d : counts.keySet()){
-			if(d == 5.0 && counts.get(d) >= atLeast)
+			if(d == 1.0 && counts.get(d) >= atLeast)
 				return true;
 		}
 		
