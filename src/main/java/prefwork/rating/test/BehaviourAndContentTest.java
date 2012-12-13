@@ -209,7 +209,8 @@ public class BehaviourAndContentTest implements Test {
 					dataSource.getContent().setFixedUserId(userId);
 				}
 				//Only one class in learned ratings, continue
-				if(!checkClasses(getClassesCounts(dataSource.getContent()), boughtInTrain, true)){
+				Map<Double,Integer> counts = getClassesCounts(dataSource.getContent());
+				if(counts.size() >= 1 && !checkClasses(counts, boughtInTrain, true)){
 					/*run++;
 					runInner++;*/
 					dataSource.getBehaviour().shuffleInstances(userId);
