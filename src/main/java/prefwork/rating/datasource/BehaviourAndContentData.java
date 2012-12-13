@@ -56,63 +56,46 @@ public class BehaviourAndContentData implements DataSource{
 		this.content = content;
 	}
 
-	public void usePredictedRatingsForContent(Method m){
+	public void usePredictedRatingsForContent(Method m, int userId){
 		//Store the original ratings in the map.
-		Integer userIdDataset;
-		int current = content.getCurrentUser();
-		usersRatings = new HashMap<Integer, Map<Integer, Double>>();
-		content.restartUserId();
-		while( (userIdDataset= content.userId())!=null){
-			content.setFixedUserId(userIdDataset);
-			content.restart();
-			if (!content.hasNext())
-				continue;			
-			Rating rec;
-			while ((rec = (Rating)content.next()) != null) {
-				int userId = rec.getUserId();
-				int objectId = rec.getObjectId();
-				double rating = rec.getRating();
+		Rating rec;
+		content.setFixedUserId(userId);
+		content.restart();
+		while ((rec = (Rating)content.next()) != null) {
+			int objectId = rec.getObjectId();
+			double rating = rec.getRating();
 
-				if(!usersRatings.containsKey(userId))
-					usersRatings.put(userId, new HashMap<Integer, Double>());
-				
-				usersRatings.get(userId).put(objectId, rating);
-			}
+			if(!usersRatings.containsKey(userId))
+				usersRatings.put(userId, new HashMap<Integer, Double>());
+			
+			usersRatings.get(userId).put(objectId, rating);
 		}
 		//Use the ratings from the behaviour method
-		content.restartUserId();
-		while( (userIdDataset= content.userId())!=null){
-			content.setFixedUserId(userIdDataset);
-			content.restart();
-			if (!content.hasNext())
-				continue;			
-			Rating rec;
-			while ((rec = (Rating)content.next()) != null) {
-				Double r = (Double)m.classifyRecord(rec);
-				if(r != null)
-					rec.setRating(r);
-			}
-		}
-		content.setFixedUserId(current);
+		content.restart();
+		while ((rec = (Rating)content.next()) != null) {
+			Double r = (Double)m.classifyRecord(rec);
+			if(r != null)
+				rec.setRating(r);
+		}		
 	}
-	public void useUserRatingsForContent(){
+	public void useUserRatingsForContent(int userId){
 		//Use the user's ratings
-		Integer userIdDataset;
-		int current = content.getCurrentUser();
-		content.restartUserId();
-		while( (userIdDataset= content.userId())!=null){
-			content.setFixedUserId(userIdDataset);
+		//Integer userIdDataset;
+		//int current = content.getCurrentUser();
+		///content.restartUserId();
+		//while( (userIdDataset= content.userId())!=null){
+		//	content.setFixedUserId(userIdDataset);
 			content.restart();
-			if (!content.hasNext())
-				continue;			
+			//if (!content.hasNext())
+			//	continue;			
 			Rating rec;
 			while ((rec = (Rating)content.next()) != null) {
-				int userId = rec.getUserId();
+				//int userId = rec.getUserId();
 				int objectId = rec.getObjectId();
 				rec.setRating(usersRatings.get(userId).get(objectId));
 			}
-		}
-		content.setFixedUserId(current);
+		//}
+		//content.setFixedUserId(current);
 	}
 	
 	@Override
