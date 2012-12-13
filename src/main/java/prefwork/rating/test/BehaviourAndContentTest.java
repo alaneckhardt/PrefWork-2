@@ -95,6 +95,7 @@ public class BehaviourAndContentTest implements Test {
 		Integer otherUserId = testDataSource.userId();
 		testDataSource.setLimit(-1, -1, false);
 		Double tempRating;
+		int tempUserId;
 		while (otherUserId != null) {
 			if(userIds.contains(otherUserId)){
 				otherUserId = testDataSource.userId();
@@ -110,6 +111,7 @@ public class BehaviourAndContentTest implements Test {
 					continue;
 				}
 				tempRating = rec.getRating();
+				tempUserId = rec.getUserId();
 				rec.setRating(0);
 				rec.setUserId(userId);
 				startTestUser = System.currentTimeMillis();
@@ -122,7 +124,7 @@ public class BehaviourAndContentTest implements Test {
 					results.addUnableToPredict(userId, run, rec.getObjectId(),0.0);
 				seen.add(rec.getObjectId());
 				rec.setRating(tempRating);
-				rec.setUserId(otherUserId);
+				rec.setUserId(tempUserId);
 				rec = (Rating)testDataSource.next();
 			}
 			otherUserId = testDataSource.userId();
@@ -190,11 +192,12 @@ public class BehaviourAndContentTest implements Test {
 			while (((runInner + 1) * trainSet <= size - 1 || size == 0) && run < numberOfRuns) {
 
 				/*try {
-					Thread.sleep(200);
+					Thread.sleep(2);
 				} catch (InterruptedException e) {
 				}*/
 				size = dataSource.size();
 				checkDataSource(dataSource.getBehaviour(),runInner, trainSet, userId, false);
+				checkDataSource(dataSource.getContent(),runInner, trainSet, userId, false);
 
 				configTrainDatasource(dataSource.getBehaviour(), runInner, trainSet, size);
 				configTrainDatasource(dataSource.getContent(), runInner, trainSet, size);
@@ -205,18 +208,16 @@ public class BehaviourAndContentTest implements Test {
 					results.setTrainCount(userId, run, trainCount);
 					// Fill the ratings of content with predicted ratings from
 					// behaviour.
-					dataSource.usePredictedRatingsForContent(ind.getBehaviour());
+					dataSource.usePredictedRatingsForContent(ind.getBehaviour(), userId);
 					dataSource.getContent().setFixedUserId(userId);
 				}
 				//Only one class in learned ratings, continue
 				Map<Double,Integer> counts = getClassesCounts(dataSource.getContent());
-				if(counts.size() >= 1 && !checkClasses(counts, boughtInTrain, true)){
-					/*run++;
-					runInner++;*/
+				/*if(counts.size() >= 1 && !checkClasses(counts, boughtInTrain, true)){					
 					dataSource.getBehaviour().shuffleInstances(userId);
 					dataSource.getContent().shuffleInstances(userId);					
 					continue;
-				}
+				}*/
 				//checkDataSource(dataSource.getContent(),runInner, trainSet, userId, true);
 				startBuildUser = System.currentTimeMillis();
 				trainCount = ind.getContent().buildModel(dataSource.getContent(), userId);
@@ -225,7 +226,7 @@ public class BehaviourAndContentTest implements Test {
 				results.addBuildTimeUser(userId, run, endBuildUser - startBuildUser);
 				if (ind.getBehaviour() != null) {
 					// Replace back the ratings to user ratings.
-					dataSource.useUserRatingsForContent();
+					dataSource.useUserRatingsForContent(userId);
 					dataSource.getContent().setFixedUserId(userId);
 				}
 

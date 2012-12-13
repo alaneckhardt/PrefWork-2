@@ -50,6 +50,7 @@ public class TopKStatistics extends TestInterpreter {
 					computeTopK(stat);
 					//getConcordantDiscordant(stat);
 					// TODO upravit
+					
 					out
 							.write((rowPrefix + userId + ";" + run + ";" 
 									+ count + ";"
@@ -123,6 +124,8 @@ public class TopKStatistics extends TestInterpreter {
 		}
 		if(positionsSum == 0)
 			positionsSum = array1.length+1;
+		if(count != 0)
+			positionsSum /= count;
 
 	}
 
