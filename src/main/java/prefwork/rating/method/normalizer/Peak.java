@@ -114,7 +114,7 @@ public class Peak implements Normalizer {
 						cutValue = iExample.value(0);
 						if(max<cutValue)
 							max = cutValue;
-						if(min<cutValue)
+						if(min>cutValue)
 							min = cutValue;
 						distributeValues();						
 						lg1.buildClassifier(isTrainingSet1);
