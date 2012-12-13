@@ -122,7 +122,7 @@ public class TopKStatistics extends TestInterpreter {
 			}
 		}
 		if(positionsSum == 0)
-			positionsSum = array1.length;
+			positionsSum = array1.length+1;
 
 	}
 
