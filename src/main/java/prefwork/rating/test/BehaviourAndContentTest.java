@@ -201,23 +201,21 @@ public class BehaviourAndContentTest implements Test {
 				Long startBuildUser, endBuildUser;
 				int trainCount;
 				if (ind.getBehaviour() != null) {
-					startBuildUser = System.currentTimeMillis();
 					trainCount = ind.getBehaviour().buildModel(dataSource.getBehaviour(), userId);
 					results.setTrainCount(userId, run, trainCount);
-					endBuildUser = System.currentTimeMillis();
-					startBuildUser = System.currentTimeMillis();
-
 					// Fill the ratings of content with predicted ratings from
 					// behaviour.
 					dataSource.usePredictedRatingsForContent(ind.getBehaviour());
 					dataSource.getContent().setFixedUserId(userId);
 				}
 				//Only one class in learned ratings, continue
-				/*if(!checkClasses(getClassesCounts(dataSource.getContent()), boughtInTrain, true)){
-					run++;
-					runInner++;
+				if(!checkClasses(getClassesCounts(dataSource.getContent()), boughtInTrain, true)){
+					/*run++;
+					runInner++;*/
+					dataSource.getBehaviour().shuffleInstances(userId);
+					dataSource.getContent().shuffleInstances(userId);					
 					continue;
-				}*/
+				}
 				//checkDataSource(dataSource.getContent(),runInner, trainSet, userId, true);
 				startBuildUser = System.currentTimeMillis();
 				trainCount = ind.getContent().buildModel(dataSource.getContent(), userId);
