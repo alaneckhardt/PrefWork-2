@@ -191,10 +191,10 @@ public class BehaviourAndContentTest implements Test {
 				break;
 			while (((runInner + 1) * trainSet <= size - 1 || size == 0) && run < numberOfRuns) {
 
-				/*try {
-					Thread.sleep(2);
+				try {
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
-				}*/
+				}
 				size = dataSource.size();
 				checkDataSource(dataSource.getBehaviour(),runInner, trainSet, userId, false);
 				checkDataSource(dataSource.getContent(),runInner, trainSet, userId, false);
@@ -290,7 +290,7 @@ public class BehaviourAndContentTest implements Test {
 		BehaviourAndContentMethod m = (BehaviourAndContentMethod) ind;
 		// ContentDataSource trainDataSource =
 		// (ContentDataSource)trainDataSource2;
-		resultsInterpreter.setHeaderPrefix("date;ratio;dataset;method;");
+		resultsInterpreter.setHeaderPrefix("date;ratio;dataset;methodBeh;methodCont;");
 		results = new TestResults(trainDataSource.getContent());
 		//Start with behaviour dataset to get the users.
 		trainDataSource.useBehaviour();
@@ -307,7 +307,6 @@ public class BehaviourAndContentTest implements Test {
 		trainDataSource.shuffleInstances();
 
 		for (int trainSet : trainSets) {
-			resultsInterpreter.setRowPrefix("" + new Date(System.currentTimeMillis()).toString() + ";" + Double.toString(trainSet) + ";" + trainDataSource.getName() + ";" + ind.toString() + ";");
 			log.info("trainSet " + trainSet);
 			trainDataSource.getBehaviour().restartUserId();	
 			trainDataSource.getContent().restartUserId();		
@@ -317,7 +316,9 @@ public class BehaviourAndContentTest implements Test {
 				trainDataSource.getContent().setFixedUserId(userId);
 				testOneRun(m, trainDataSource, userId, trainSet);
 					synchronized (PrefWork.semWrite) {
-						resultsInterpreter.setRowPrefix("" + new Date(System.currentTimeMillis()).toString() + ";" + Double.toString(trainSet) + ";" + trainDataSource.getName() + ";" + ind.toString() + ";");
+						resultsInterpreter.setRowPrefix("" + new Date(System.currentTimeMillis()).toString() + ";" + Double.toString(trainSet) + ";" + trainDataSource.getName() + ";" 
+						//Split the name of the method to two - methodBeh and methodCont
+						+ ind.toString().replaceAll("\\+",";") + ";");
 						PrefWork.semWrite.acquire();
 						resultsInterpreter.writeTestResults(results);
 						results.reset();

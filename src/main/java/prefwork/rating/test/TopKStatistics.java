@@ -22,7 +22,8 @@ public class TopKStatistics extends TestInterpreter {
 	int run;
 	int count, positionsSum;
 	double ndcg;
-	int topk;
+	int topk[];
+	int actualTopK;
 	@Override
 	synchronized public void writeTestResults(TestResults testResults) {
 		this.testResults = testResults;
@@ -36,33 +37,36 @@ public class TopKStatistics extends TestInterpreter {
 						true));
 				out
 						.write(headerPrefix
-								+ "userId;run;topkCount;topkRatio;ndcg;mae;buildTime;testTime;countTrain;countTest;countUnableToPredict;\n");
+								+ "userId;topk;run;topkCount;topkRatio;ndcg;mae;buildTime;testTime;countTrain;countTest;countUnableToPredict;\n");
 			} else
 				out = new BufferedWriter(new FileWriter(filePrefix + ".csv",
 						true));
 			for (Integer userId : testResults.getUsers()) {
 				List<Stats> l = testResults.getListStats(userId);
 				for (int i = 0; i < l.size(); i++) {
-					run = i;
-					Stats stat = testResults.getStatNoAdd(userId, run);
-					if (stat == null)
-						continue;
-					computeTopK(stat);
-					//getConcordantDiscordant(stat);
-					// TODO upravit
-					
-					out
-							.write((rowPrefix + userId + ";" + run + ";" 
-									+ count + ";"
-									+ positionsSum + ";"
-									+ ndcg + ";"
-									+ computeMae(stat) + ";"
-									+ stat.buildTime + ";" + stat.testTime
-									+ ";" + stat.countTrain + ";"
-									+ stat.countTest + ";"
-									+ stat.countUnableToPredict + ";"+ "\n")
-									.replace('.', ','));
-
+					//Iterate over different top-k sizes
+					for (int j = 0; j < topk.length; j++) {
+						actualTopK = topk[j];
+						run = i;
+						Stats stat = testResults.getStatNoAdd(userId, run);
+						if (stat == null)
+							continue;
+						computeTopK(stat);
+						//getConcordantDiscordant(stat);
+						// TODO upravit
+						
+						out
+								.write((rowPrefix + userId + ";" + actualTopK  + ";" + run + ";" 
+										+ count + ";"
+										+ positionsSum + ";"
+										+ ndcg + ";"
+										+ computeMae(stat) + ";"
+										+ stat.buildTime + ";" + stat.testTime
+										+ ";" + stat.countTrain + ";"
+										+ stat.countTest + ";"
+										+ stat.countUnableToPredict + ";"+ "\n")
+										.replace('.', ','));
+					}
 				}
 			}
 			out.flush();
@@ -102,10 +106,10 @@ public class TopKStatistics extends TestInterpreter {
 			arr[i] = array2[j].rating;
 		}
 		
-		ndcg = ndcg(arr, topk);
+		ndcg = ndcg(arr, actualTopK);
 		
 		
-		array1 = java.util.Arrays.copyOf(array1, Math.min(topk, array1.length));
+		array1 = java.util.Arrays.copyOf(array1, Math.min(actualTopK, array1.length));
 		//array1 = setWeights(array1);
 		java.util.Arrays.sort(array2, cd);
 		//array2 = setWeights(array2);
@@ -133,7 +137,7 @@ public class TopKStatistics extends TestInterpreter {
 	public void configTestInterpreter(XMLConfiguration config, String section) {
 		// TODO Auto-generated method stub
 		Configuration testConf = config.configurationAt(section);
-		topk = Utils.getIntFromConfIfNotNull(testConf, "topk", topk);
+		topk = Utils.stringListToIntArray(testConf.getList("topk"));
 		
 	}
 	
