@@ -46,6 +46,8 @@ public class TopKStatistics extends TestInterpreter {
 				for (int i = 0; i < l.size(); i++) {
 					//Iterate over different top-k sizes
 					for (int j = 0; j < topk.length; j++) {
+						positionsSum = 0;
+						ndcg = 0;
 						actualTopK = topk[j];
 						run = i;
 						Stats stat = testResults.getStatNoAdd(userId, run);
@@ -83,6 +85,7 @@ public class TopKStatistics extends TestInterpreter {
 	 * @return
 	 */
 	private void computeTopK(Stats stat) {
+		positionsSum = 0;
 		Set<Entry<Integer, Double[]>> set = stat.getSet();
 		if (set == null || set.size() <= 0)
 			return;
